@@ -6,6 +6,7 @@ import PokemonModel from "@/components/PokemonModel";
 
 const Home = () => {
   const [entities, setEntities] = useState([]);
+  const [modal, setModal] = useState(false);
   const [pageData, setPageData] = useState({ currPage: null, nextPage: null });
   const url = `https://pokeapi.co/api/v2/pokemon?offset=${pageData.currPage}&limit=${pageData.nextPage}`;
 
@@ -25,6 +26,7 @@ const Home = () => {
             name={resData.forms[0].name}
             id={resData.id}
             className="pokemon-card"
+            closeModal={closeModal}
           />
         );
       })
@@ -53,6 +55,14 @@ const Home = () => {
     console.log("prev:", pageData);
   };
 
+  const closeModal = ()=>{
+    setModal(true);
+  }
+
+  const setCloseModal = ()=>{
+    setModal(false);
+  }
+
   return (
     <>
       <Navbar />
@@ -60,7 +70,12 @@ const Home = () => {
       <div className="button-div">
         <button onClick={prevIndex}>previce</button>
         <button onClick={nextIndex}>Next</button>
+        {console.log("modal value",modal)}
       </div>
+      {modal?<PokemonModel 
+      closeModal={closeModal} 
+      setCloseModal={setCloseModal}
+      /> :null}
     </>
   );
 };

@@ -166,3 +166,159 @@ button:focus {
   outline: none;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
+
+/* pokemon-modal */
+
+.modal-wrapper{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: rgba(189, 189, 189, 0.9);
+}
+
+.modal-container{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  border-radius: 0.5rem;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  background-color: #fff;
+}
+
+/* pokemon-modal card css */
+.container {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width:100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.header .number {
+  font-size: 24px;
+  color: #999;
+}
+
+.description {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.description img {
+  width: 150px;
+  height: auto;
+  margin-right: 20px;
+}
+
+.description p {
+  font-size: 14px;
+  color: #555;
+}
+
+.details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.details .info, .details .types {
+  width: 45%;
+}
+
+.details p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.stats {
+  margin-bottom: 20px;
+}
+
+.stats p {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.stat span {
+  width: 100px;
+  font-size: 14px;
+  color: #333;
+}
+
+.bar {
+  flex: 1;
+  background-color: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0 10px;
+}
+
+.progress {
+  height: 10px;
+  background-color: #76c7c0;
+}
+
+.evolution-chain {
+  text-align: center;
+}
+
+.evolution-chain h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.evolution {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.evo-stage {
+  text-align: center;
+  margin: 0 10px;
+}
+
+.evo-stage img {
+  width: 100px;
+  height: auto;
+}
+
+.evo-stage p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.evo-stage span {
+  font-size: 12px;
+  color: #999;
+}

@@ -2,7 +2,9 @@ const PokemonCard = (props) => {
   return (
     <>
       <div className="main-div">
-          <div key={1} className="card">
+          <div key={1} className="card" onClick={()=>{
+          props.closeModal();
+        }}>
             <img
               src={props.img}
               alt="pokemon-image"
