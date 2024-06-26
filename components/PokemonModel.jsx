@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
 
 const PokemonModel = (props) => {
-  console.log("Pokemon Id:", props.id);
   const url_text = `https://pokeapi.co/api/v2/pokemon-species/${props.id}/`;
   const url = `https://pokeapi.co/api/v2/pokemon/${props.id}/`;
 
-  console.log("url", url);
 
   const [pokemonData, setpokemonData] = useState();
   const [text, getText] = useState("");
+  const [evaluationData , getEvaluationData] = useState("");
+  const [imgData , getImgData] = useState([]);
+  const [imgUrl , getImgUrl] = useState([]);
+  const [evalId , getEvalId] = useState([]);
+  const [evalName , getEvalName] = useState([]);
+
 
   useEffect(() => {
     fetch(url).then((res) => {
       res.json().then((data) => {
-        console.log("data:", data);
         setpokemonData(data);
       });
     });
@@ -22,7 +25,6 @@ const PokemonModel = (props) => {
   useEffect(() => {
     fetch(url_text).then((res) => {
       res.json().then((data_text) => {
-        console.log("data_text:", data_text);
         getText(data_text);
       });
     });
@@ -30,17 +32,83 @@ const PokemonModel = (props) => {
 
   // Evaluation - chain
 
-  const Evaluation_url = text.evolution_chain.url;
+  const evaluation_url = text.evolution_chain?.url;
 
   useEffect(() => {
-    fetch(Evaluation_url).then((res) => {
+    fetch(evaluation_url).then((res) => {
       res.json().then((Evaluation_text) => {
-        console.log("data_text:", data_text);
-        getText(data_text);
+        getEvaluationData(Evaluation_text);
       });
     });
-  }, [props.id]);
+  }, [text]);
 
+  let EvolutionArray = [];
+      EvolutionArray.push(evaluationData?.chain?.species);
+      EvolutionArray.push(evaluationData?.chain?.evolves_to[0]?.species);
+      let eval3 =
+        evaluationData?.chain?.evolves_to[0]?.evolves_to[0] == undefined
+          ? ""
+          : evaluationData?.chain?.evolves_to[0]?.evolves_to[0]?.species;
+      if (eval3 != "") {
+        EvolutionArray.push(eval3);
+      }
+
+      // console.log("EvolutionArray :",EvolutionArray);
+
+    // get evaluation img
+
+    useEffect(()=>{
+      EvolutionArray.forEach((obj)=>{
+        fetch(obj?.url).then((res) => {
+          res.json().then((img_data) => {
+            getImgData((previous)=>{
+              return [...previous,img_data.id]
+            });
+
+            // const imgData = [img_data.id]
+            console.log("img_id :",img_data.id);
+          });
+        });
+    })
+
+    },[evaluationData]);
+
+    console.log("main_img_id :",imgData);
+
+    useEffect(()=>{
+      imgData.forEach((getEval_img_id)=>{
+        const eval_url = `https://pokeapi.co/api/v2/pokemon/${getEval_img_id}/`
+        fetch(eval_url).then((res) => {
+          res.json().then((eval_img_url) => {
+            console.log("eval_img_url",eval_img_url?.sprites?.other?.dream_world?.front_default);
+            // get img
+            getImgUrl((pre_eval_img)=>{
+              return[...pre_eval_img ,eval_img_url?.sprites?.other?.dream_world?.front_default]
+            })
+            // get id
+            getEvalId((pre_id)=>{
+              return[...pre_id ,eval_img_url.id]
+            })
+            // get name
+            getEvalName((pre_name)=>{
+              return[...pre_name,eval_img_url.name]
+            })
+          });
+        });
+      })
+    },[imgData])
+
+    const unique_eval_url = [...new Set(imgUrl)];
+    const evaluation_img_array =unique_eval_url.sort();
+
+    const unique_evalId = [...new Set(evalId)];
+    const evaluation_id_array =unique_evalId.sort();
+
+    const unique_evalName = [...new Set(evalName)];
+    const evaluation_name_array =unique_evalName.sort();
+    
+    console.log("evalId",evalId);
+    console.log("evalName",evalName);
 
   let pokemon_discription = "";
 
@@ -100,7 +168,6 @@ const PokemonModel = (props) => {
                 {text.egg_groups ? text.egg_groups[0].name : ""} ,
                 {text.egg_groups ? text.egg_groups[1].name : ""}
                 {/* } */}
-                {console.log("egg-length:", text.egg_groups?.length)}
               </p>
               <p>
                 <strong>
@@ -133,29 +200,29 @@ const PokemonModel = (props) => {
             <div className="evolution">
               <div className="evo-stage">
                 <img
-                  src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg"
+                  src={evaluation_img_array[0]?evaluation_img_array[0]:" "}
                   alt="Charmander"
                 ></img>
-                <p>Charmander</p>
-                <span>004</span>
+                <p>{evaluation_name_array[0]?evaluation_name_array[0]:""}</p>
+                <span>00{evaluation_id_array[0]?evaluation_id_array[0]:""}</span>
               </div>
               <span>&rarr;</span>
               <div className="evo-stage">
                 <img
-                  src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg"
+                  src={evaluation_img_array[1]?evaluation_img_array[1]:""}
                   alt="Charmeleon"
                 ></img>
-                <p>Charmeleon</p>
-                <span>005</span>
+                <p>{evaluation_name_array[1]?evaluation_name_array[1]:""}</p>
+                <span>00{evaluation_id_array[1]?evaluation_id_array[1]:""}</span>
               </div>
               <span>&rarr;</span>
               <div className="evo-stage">
                 <img
-                  src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg"
+                  src={evaluation_img_array[2]?evaluation_img_array[2]:""}
                   alt="Charizard"
                 ></img>
-                <p>Charizard</p>
-                <span>006</span>
+                <p>{evaluation_name_array[2]?evaluation_name_array[2]:""}</p>
+                <span>00{evaluation_id_array[2]?evaluation_id_array[2]:""}</span>
               </div>
               <div>
                 <button

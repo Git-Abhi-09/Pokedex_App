@@ -3,13 +3,11 @@ import { useState, useEffect } from "react";
 import PokemonCard from "@/components/PokemonCard";
 import Navbar from "@/components/Navbar";
 import PokemonModel from "@/components/PokemonModel";
-import GetpopupData from "./GetpopupData";
 
 const Home = () => {
   const [entities, setEntities] = useState([]);
   const [modal, setModal] = useState(false);
   const [id, setId] = useState(null);
-  console.log("id:",id);
   const [pageData, setPageData] = useState({ currPage: null, nextPage: null });
   const url = `https://pokeapi.co/api/v2/pokemon?offset=${pageData.currPage}&limit=${pageData.nextPage}`;
 
@@ -47,7 +45,6 @@ const Home = () => {
       currPage: pageData.currPage + 20,
       nextPage: (pageData.nextPage = 20),
     });
-    console.log("next:", pageData);
   };
 
   const prevIndex = () => {
@@ -55,7 +52,6 @@ const Home = () => {
       currPage: pageData.currPage - 20,
       nextPage: (pageData.nextPage = 20),
     });
-    console.log("prev:", pageData);
   };
 
   const closeModal = (id) => {
