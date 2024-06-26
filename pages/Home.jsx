@@ -3,10 +3,13 @@ import { useState, useEffect } from "react";
 import PokemonCard from "@/components/PokemonCard";
 import Navbar from "@/components/Navbar";
 import PokemonModel from "@/components/PokemonModel";
+import GetpopupData from "./GetpopupData";
 
 const Home = () => {
   const [entities, setEntities] = useState([]);
   const [modal, setModal] = useState(false);
+  const [id, setId] = useState(null);
+  console.log("id:",id);
   const [pageData, setPageData] = useState({ currPage: null, nextPage: null });
   const url = `https://pokeapi.co/api/v2/pokemon?offset=${pageData.currPage}&limit=${pageData.nextPage}`;
 
@@ -55,13 +58,14 @@ const Home = () => {
     console.log("prev:", pageData);
   };
 
-  const closeModal = ()=>{
+  const closeModal = (id) => {
+    setId(id);
     setModal(true);
-  }
+  };
 
-  const setCloseModal = ()=>{
+  const setCloseModal = () => {
     setModal(false);
-  }
+  };
 
   return (
     <>
@@ -70,12 +74,11 @@ const Home = () => {
       <div className="button-div">
         <button onClick={prevIndex}>previce</button>
         <button onClick={nextIndex}>Next</button>
-        {console.log("modal value",modal)}
+        {console.log("modal value", modal)}
       </div>
-      {modal?<PokemonModel 
-      closeModal={closeModal} 
-      setCloseModal={setCloseModal}
-      /> :null}
+      {modal ? (
+        <PokemonModel id={id} closeModal={closeModal} setCloseModal={setCloseModal} />
+      ) : null}
     </>
   );
 };
