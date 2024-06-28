@@ -15,6 +15,12 @@ const typesOptions = [
   "water",
 ];
 
+const genderOptions = [
+  "male",
+  "female",
+  "genderless",
+];
+
 const Home = () => {
   const [entities, setEntities] = useState([]);
   const [modal, setModal] = useState(false);
@@ -94,7 +100,37 @@ const Home = () => {
     getPokemon();
   }
 
-  console.log(entities.length);
+// gender filter
+
+
+let allGenderData;
+const genderFiterData = async (e) => {
+  let gender = e.target.value;
+    const url = `https://pokeapi.co/api/v2/gender/${gender}/`
+    const responace = await fetch(url);
+    const data = await responace.json();
+
+    allGenderData = await Promise.all (data.pokemon_species_details.map(async(res, index) => {
+      let id = res.pokemon_species.url.substring(42).replace("/", "");
+      const typeUrl = `https://pokeapi.co/api/v2/pokemon/${id}/`
+      const resType = await fetch(typeUrl);
+      const resData = await resType.json();
+      return  <PokemonCard
+      key={resData.id}
+      img={resData.sprites.other.dream_world.front_default}
+      name={resData.forms[0].name}
+      id={resData.id}
+      className="pokemon-card"
+      closeModal={closeModal}
+    />
+    }));
+    setEntities(allGenderData);
+}
+
+ 
+const resetAllGender = ()=>{
+  getPokemon();
+}
 
   const nextIndex = () => {
     setPageData({
@@ -160,9 +196,15 @@ const Home = () => {
           </div>
           <div class="filter">
             <label for="gender">Gender</label>
-            <select id="gender">
-              <option>Male + 2 More</option>
+            <select
+              id="type"
+              onChange={genderFiterData}
+            >
+              {genderOptions.map((type) => (
+                <option onClick={genderFiterData} value={`${type}`}>{type}</option>
+              ))}
             </select>
+            <button onClick={resetAllGender}>Reset-Gender</button>
           </div>
         </div>
       </div>
