@@ -19,7 +19,7 @@ const PokemonCard = (props) => {
             className="pokemon-image"
             height="400"
             width="250"
-          ></img>
+          />
           <div className="pokemon-name">{props.name}</div>
           <div className="pokemon-number">00{props.id}</div>
         </div>

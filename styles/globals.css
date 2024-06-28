@@ -179,7 +179,7 @@ button:focus {
 }
 
 .modal-container{
-  position: fixed;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
@@ -290,6 +290,14 @@ button:focus {
 
 .evolution-chain {
   text-align: center;
+}
+
+.close-btn{
+  position: fixed;
+  top: 2px;     
+  right: 2px;
+  z-index: 1000;
+  border-radius: 50%;
 }
 
 .evolution-chain h2 {

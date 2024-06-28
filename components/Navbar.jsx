@@ -1,4 +1,7 @@
 const Navbar = () => {
+    const serchFilter = (e)=>{
+        console.log("value.....",e.target.value);
+    }
   return (
     <>
       <div class="pokedex-container">
@@ -9,7 +12,7 @@ const Navbar = () => {
         </div>
         <div class="filters">
         <div class="search-container">
-            <input type="text" placeholder="Name or Number" class="search-input"></input>
+            <input type="text" placeholder="Name or Number" onChange={serchFilter} class="search-input"></input>
             <button class="search-button">
             Search
             </button>
