@@ -1,10 +1,4 @@
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-
 const PokemonCard = (props) => {
-  const route = useRouter();
-  // const [bgcolor, setColor] = useState([]);
-
   const color = {
     normal: "#DDCBD0",
     fighting: "#FCC1B0 ",

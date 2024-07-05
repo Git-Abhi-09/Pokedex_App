@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import PokemonCard from "@/components/PokemonCard";
 import PokemonModel from "@/components/PokemonModel";
+import SearchIcon from '@mui/icons-material/Search';
 
 const typesOptions = [
   "fire",
@@ -22,9 +23,9 @@ const Home = () => {
   const [modal, setModal] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [id, setId] = useState(null);
-  const [pageData, setPageData] = useState({ currPage: null, nextPage: null });
+  const [pageData, setPageData] = useState({ currPage: 0, nextPage: 18 });
   const [color, setColor] = useState([]);
-
+ 
   const url = `https://pokeapi.co/api/v2/pokemon?offset=${pageData.currPage}&limit=${pageData.nextPage}`;
 
   async function getPokemon() {
@@ -65,7 +66,7 @@ const Home = () => {
 
   const handleSearch = () => {
     const response = entities.filter((i) => {
-      return i.props.name == searchValue;
+      return i.props.name.includes(searchValue);
     });
     return setEntities(response);
   };
@@ -75,13 +76,15 @@ const Home = () => {
   let alldata;
   const fiterdata = async (e) => {
     let categery = e.target.value;
-    const url = `https://pokeapi.co/api/v2/type/${categery}/`;
+    const url = `https://pokeapi.co/api/v2/type/${categery}`;
     const responace = await fetch(url);
     const data = await responace.json();
 
     alldata = await Promise.all(
       data.pokemon.map(async (res) => {
+
         let id = res.pokemon.url.substring(34).replace("/", "");
+        
         const typeUrl = `https://pokeapi.co/api/v2/pokemon/${id}/`;
         const resType = await fetch(typeUrl);
         const resData = await resType.json();
@@ -98,7 +101,7 @@ const Home = () => {
         return (
           <PokemonCard
             key={resData.id}
-            img={resData.sprites.other.dream_world.front_default}
+            img={resData?.sprites?.other?.dream_world?.front_default}
             name={resData.forms[0].name}
             id={resData.id}
             className="pokemon-card"
@@ -166,15 +169,15 @@ const Home = () => {
 
   const nextIndex = () => {
     setPageData({
-      currPage: pageData.currPage + 20,
-      nextPage: (pageData.nextPage = 20),
+      currPage: pageData.currPage + 18,
+      nextPage: (pageData.nextPage = 18),
     });
   };
 
   const prevIndex = () => {
     setPageData({
-      currPage: pageData.currPage - 20,
-      nextPage: (pageData.nextPage = 20),
+      currPage: pageData.currPage - 18,
+      nextPage: (pageData.nextPage = 18),
     });
   };
 
@@ -185,10 +188,6 @@ const Home = () => {
 
   const setCloseModal = () => {
     setModal(false);
-  };
-
-  const serchFilter = (e) => {
-    setSearchValue(e.target.value);
   };
 
   return (
@@ -202,17 +201,19 @@ const Home = () => {
           </p>
         </div>
         <div class="filters">
-          <div class="search-container">
-            <input
+          
+            <div><input
               type="text"
               placeholder="Name or Number"
-              onChange={serchFilter}
-              class="search-input"
-            ></input>
-            <button class="search-button" onClick={handleSearch}>
-              Search
-            </button>
-          </div>
+              onChange={(e)=>{
+                setSearchValue(e.target.value);
+              }}
+              className="search-input"
+            ></input></div>
+            <div><button class="search-button" onClick={handleSearch}>
+              <SearchIcon/>
+            </button></div>
+          
           <div class="filter">
             <label for="type">Type</label>
             <select className="dropdown" onChange={fiterdata}>
@@ -242,8 +243,8 @@ const Home = () => {
       <div className="inner-div">{entities}</div>
 
       <div className="button-div">
-        <button onClick={prevIndex}>Prev</button>
-        <button onClick={nextIndex}>Next</button>
+        <button className="btn" onClick={prevIndex}>Prev</button>
+        <button className="btn" onClick={nextIndex}>Next</button>
       </div>
       {modal ? (
         <PokemonModel

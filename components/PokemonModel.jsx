@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import PokemonCard from "./PokemonCard";
+import Arrow from "./Arrow";
+import ProgressBar from "./ProgressBar";
 
 const PokemonModel = (props) => {
   const url_text = `https://pokeapi.co/api/v2/pokemon-species/${props.id}/`;
@@ -13,8 +15,9 @@ const PokemonModel = (props) => {
   const [evalId, getEvalId] = useState([]);
   const [evalName, getEvalName] = useState([]);
   const [pokemonStats, getPokemonStats] = useState([]);
-  const [color, setColor] = useState([]);
   const [colorData, setColorData] = useState([]);
+  const [colorData1, setColorData1] = useState([]);
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     fetch(url).then((res) => {
@@ -84,8 +87,6 @@ const PokemonModel = (props) => {
       const eval_url = `https://pokeapi.co/api/v2/pokemon/${getEval_img_id}/`;
       fetch(eval_url).then((res) => {
         res.json().then((eval_img_url) => {
-          console.log(eval_img_url);
-
           // get color
 
           const color = [
@@ -95,7 +96,13 @@ const PokemonModel = (props) => {
               : eval_img_url?.types[0]?.type.name,
           ];
 
-          setColorData((prev) => [...prev, color]);
+          setColorData((prev) => {
+            return [...prev, color];
+          });
+
+          setColorData1((prev) => {
+            return [color];
+          });
 
           // get img
           getImgUrl((pre_eval_img) => {
@@ -116,6 +123,8 @@ const PokemonModel = (props) => {
       });
     });
   }, [imgData]);
+
+  console.log(evalId);
 
   const unique_eval_url = [...new Set(imgUrl)];
   const evaluation_img_array = unique_eval_url.sort();
@@ -142,6 +151,14 @@ const PokemonModel = (props) => {
     }
   });
 
+  const getModal = () => {
+    setModal(true);
+  };
+
+  const closeModal = () => {
+    setModal(false);
+  };
+
   return (
     <>
       <div
@@ -159,102 +176,84 @@ const PokemonModel = (props) => {
           <div className="model-card">
             <PokemonCard
               img={pokemonData?.sprites?.other?.dream_world?.front_default}
-              color={colorData[0]}
+              color={colorData1[0]}
+              id={pokemonData?.id}
             />
             <p className="pokemon-detail">
-              {pokemon_discription?.substring(0, 700) + "....read more"}
+              {pokemon_discription?.substring(0, 700)}
+              <a className="read-more" onClick={getModal}>...read more</a>
             </p>
           </div>
-          <div className="details">
-            <div className="info">
-              <p>
-                <strong>Height:</strong> {pokemonData?.height}
+          {modal ? (
+            <div className="modal-text">
+              <p id="pokemonDescription">
+                {pokemon_discription?.substring(701)}
               </p>
-              <p>
-                <strong>Weight:</strong>
-                {pokemonData?.weight}
-              </p>
-              <p>
-                <strong>Gender(s):</strong> Male, Female
-              </p>
-              <p>
-                <strong>Egg Groups:</strong>
-                {text.egg_groups?.map((data) => {
-                  return (
-                    <button style={{ cursor: "auto", backgroundColor: "pink" }}>
-                      {data.name}
-                    </button>
-                  );
-                })}
-              </p>
-              <p>
-                <strong>
-                  {pokemonData?.abilities
-                    ? pokemonData?.abilities[0].ability?.name
-                    : ""}
-                </strong>
-              </p>
-              <p>
-                <strong>Types:</strong>
-                {pokemonData?.types[0] ? pokemonData?.types[0]?.type.name : ""}
-                <strong> , </strong>
-                {pokemonData?.types[1] ? pokemonData?.types[1]?.type.name : ""}
-              </p>
-              <p>
-                <strong>Weak Against:</strong> Fighting, Ground, Steel, Water,
-                Grass
-              </p>
+              <botton className="close-btn1" onClick={closeModal}>
+                X
+              </botton>
             </div>
+          ) : null}
+
+          <div className="info">
+            <p>
+              <h3>Height:</h3> {pokemonData?.height}
+            </p>
+            <p>
+              <h3>Weight:</h3>
+              {pokemonData?.weight}
+            </p>
+            <p>
+              <h3>Gender(s):</h3> Male, Female
+            </p>
+            <p>
+              <h3>Egg Groups:</h3>
+              {text.egg_groups?.map((data) => {
+                return (
+                  <span>
+                    {data.name} ,
+                  </span>
+                );
+              })}
+            </p>
+            <p>
+              <h3>Ability :</h3>
+              {pokemonData?.abilities
+                ? pokemonData?.abilities[0].ability?.name
+                : ""}
+            </p>
+            <p>
+              <h3>Types:</h3>
+              <button className="type-btn">{pokemonData?.types[0] ? pokemonData?.types[0]?.type.name : ""}</button>
+              <button className="type-btn">{pokemonData?.types[1] ? pokemonData?.types[1]?.type.name : ""}</button>
+            </p>
+            <p>
+              <h3>Weak Against:</h3> Fighting, Ground, Steel, Water, Grass
+            </p>
           </div>
+
           <div className="types">
             <div className="stats">
               <p>
-                hp :
-                <progress
-                  id="file"
-                  value={pokemonStats[0]}
-                  max="100"
-                ></progress>
+                HP <ProgressBar progress={pokemonStats[0]}  />
               </p>
               <p>
-                attack :
-                <progress
-                  id="file"
-                  value={pokemonStats[1]}
-                  max="100"
-                ></progress>
+                attack <ProgressBar progress={pokemonStats[1]}  />
               </p>
               <p>
-                defense :
-                <progress
-                  id="file"
-                  value={pokemonStats[2]}
-                  max="100"
-                ></progress>
+                defense <ProgressBar progress={pokemonStats[2]}  />
               </p>
               <p>
-                special-attack :
-                <progress
-                  id="file"
-                  value={pokemonStats[3]}
-                  max="100"
-                ></progress>
+                sp.Attack 
+                <ProgressBar progress={pokemonStats[3]}  />
               </p>
               <p>
-                special-defense :
-                <progress
-                  id="file"
-                  value={pokemonStats[4]}
-                  max="100"
-                ></progress>
+                sp.Def
+                <ProgressBar progress={pokemonStats[4]}  />
               </p>
               <p>
-                speed :
-                <progress
-                  id="file"
-                  value={pokemonStats[5]}
-                  max="100"
-                ></progress>
+                speed 
+                <ProgressBar progress={pokemonStats[5]}  />
               </p>
             </div>
           </div>
@@ -263,12 +262,16 @@ const PokemonModel = (props) => {
             <div className="evolution">
               {evaluation_id_array.map((singlePok, index) => {
                 return (
-                  <PokemonCard
-                    id={singlePok}
-                    name={evaluation_name_array[index]}
-                    img={evaluation_img_array[index]}
-                    color={colorData[index]}
-                  />
+                  <>
+                    <PokemonCard
+                      id={singlePok}
+                      name={evaluation_name_array[index]}
+                      img={evaluation_img_array[index]}
+                      color={colorData[index]}
+                    />
+
+                    {evaluation_id_array.length === index + 1 ? "" : <Arrow />}
+                  </>
                 );
               })}
 

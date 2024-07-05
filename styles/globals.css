@@ -1,4 +1,7 @@
 /* pokemonCard */
+* {
+  text-transform: capitalize;
+}
 
 body {
   display: flex;
@@ -6,7 +9,7 @@ body {
   align-items: center;
   height: vh;
   width: vw;
-  background-color: #f0f9fa;
+  background-color: #deeded;
   font-family: Arial, sans-serif;
 }
 .inner-div {
@@ -16,10 +19,6 @@ body {
   flex-direction: row;
 }
 .main-div {
-  /* display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  flex-direction: row; */
   display: inline-block;
 }
 .card {
@@ -28,13 +27,12 @@ body {
   flex-direction: column;
   align-items: center;
   width: 200px;
-  height: 220px;
-  margin: 10px;
-  padding: 10px;
-  border: 3px dashed #aca6a6;
+  height: 280px;
+  margin: 15px;
+  border: 2px dashed #3e3c3c;
   border-radius: 10px;
   /* background: linear-gradient(to bottom, #e0f7fa, #e1bee7); */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
 }
 
 .pokemon-image {
@@ -44,26 +42,26 @@ body {
 
 .pokemon-name {
   margin-top: 10px;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: bold;
   color: #333;
+  text-transform: capitalize;
 }
 
 .pokemon-number {
   margin-top: 5px;
-  font-size: 14px;
+  font-size: 25px;
   color: #666;
 }
 
 /* Navbar */
 
 .pokedex-container {
-  background-color: #f0f9fa;
+  background-color:#deeded;
   padding: 10px;
   margin: 10px;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: vw;
+  width: 95vw;
 }
 
 .header {
@@ -90,17 +88,20 @@ body {
 }
 
 .search-input {
-  width: 100%;
+  width: 450px;
+  background-color: #c9dde2;
   max-width: 400px;
+  height: 25px;
   padding: 10px;
-  border: 1px solid #cfd8e3;
+  border: 1px solid #c9dde2;
   border-radius: 4px 0 0 4px;
   outline: none;
 }
 
 .search-button {
   padding: 10px;
-  background-color: #cfd8e3;
+  height: 55px;
+  background-color: #c9dde2;
   border: none;
   border-radius: 0 4px 4px 0;
   cursor: pointer;
@@ -141,7 +142,7 @@ body {
   justify-content: center;
 }
 
-button {
+.btn {
   padding: 10px 20px;
   margin: 5px;
   border: none;
@@ -174,7 +175,7 @@ button:focus {
   right: 0;
   bottom: 0;
   top: 0;
-  background-color: rgba(189, 189, 189, 0.9);
+  background-color: rgba(33, 29, 69, 0.9);
 }
 
 .modal-container {
@@ -188,7 +189,19 @@ button:focus {
   max-height: 100%;
   background-color: #fff;
 }
-
+.modal-text {
+  position: fixed;
+  padding: 10px;
+  top: 50%;
+  left: 50%;
+  margin-top: 200px;
+  transform: translate(-50%, -50%);
+  border-radius: 0.5rem;
+  height: auto;
+  width: 90%;
+  background-color: #141c3d;
+  color: white;
+}
 /* pokemon-modal card css */
 .model-card {
   display: flex;
@@ -225,6 +238,7 @@ h1 {
 
 .pokemon-detail {
   padding: 0px 10px 0px 10px;
+  line-height: 25px;
 }
 .description {
   display: flex;
@@ -250,9 +264,12 @@ h1 {
 }
 
 .types {
-  display: flex;
   justify-content: space-between;
   padding: 10px;
+}
+
+.type-btn {
+  background-color: #f1cce3;
 }
 
 .details .info,
@@ -266,8 +283,24 @@ h1 {
   color: #333;
 }
 
-.close-btn {
-  background-color: #e0f7fa;
+.read-more {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.close-btn1 {
+  background-color: #141c3d;
+  cursor: pointer;
+  padding: 10px;
+  position: fixed;
+  top: 2px;
+  right: 2px;
+  z-index: 1000;
+  border-radius: 50%;
+}
+
+#pokemonDescription {
+  padding: 10px;
 }
 
 .info {
@@ -278,9 +311,9 @@ h1 {
 
 .stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  background-color: #94acc3;
+  background-color: RGB(176, 210, 210);
   border-radius: 4px;
   padding: 5px;
 }
@@ -326,6 +359,8 @@ h1 {
   right: 2px;
   z-index: 1000;
   border-radius: 50%;
+  background-color: #e0f7fa;
+  cursor: pointer;
 }
 
 .evolution-chain h2 {
@@ -357,4 +392,31 @@ h1 {
 .evo-stage span {
   font-size: 12px;
   color: #999;
+}
+
+select {
+  width: 200px;
+  padding: 10px;
+  font-size: 15px;
+  border: 2px solid #111010;
+  border-radius: 4px;
+  background-color: #e0f7fa;
+}
+
+/* progress bar */
+.progressBar {
+  width: 80%;
+  background-color: #f3f3f3;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress {
+  height: 15px;
+  background-color: RGB(46, 49, 86);
+  display: flex;
+  padding: 2px;
+  font-size: small;
+  color: white;
+  transition: width 0.3s ease-in-out;
 }
