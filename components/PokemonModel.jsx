@@ -83,6 +83,7 @@ const PokemonModel = (props) => {
   }, [evaluationData]);
 
   useEffect(() => {
+    EvolutionArray.forEach((singlPok) => {});
     imgData.forEach((getEval_img_id) => {
       const eval_url = `https://pokeapi.co/api/v2/pokemon/${getEval_img_id}/`;
       fetch(eval_url).then((res) => {
@@ -124,13 +125,11 @@ const PokemonModel = (props) => {
     });
   }, [imgData]);
 
-  console.log(evalId);
-
   const unique_eval_url = [...new Set(imgUrl)];
   const evaluation_img_array = unique_eval_url.sort();
 
   const unique_evalId = [...new Set(evalId)];
-  const evaluation_id_array = unique_evalId.sort();
+  let evaluation_id_array = unique_evalId.sort();
 
   const unique_evalName = [...new Set(evalName)];
   const evaluation_name_array = unique_evalName.sort();
@@ -181,7 +180,9 @@ const PokemonModel = (props) => {
             />
             <p className="pokemon-detail">
               {pokemon_discription?.substring(0, 700)}
-              <a className="read-more" onClick={getModal}>...read more</a>
+              <a className="read-more" onClick={getModal}>
+                ...read more
+              </a>
             </p>
           </div>
           {modal ? (
@@ -209,11 +210,7 @@ const PokemonModel = (props) => {
             <p>
               <h3>Egg Groups:</h3>
               {text.egg_groups?.map((data) => {
-                return (
-                  <span>
-                    {data.name} ,
-                  </span>
-                );
+                return <span>{data.name} ,</span>;
               })}
             </p>
             <p>
@@ -224,8 +221,12 @@ const PokemonModel = (props) => {
             </p>
             <p>
               <h3>Types:</h3>
-              <button className="type-btn">{pokemonData?.types[0] ? pokemonData?.types[0]?.type.name : ""}</button>
-              <button className="type-btn">{pokemonData?.types[1] ? pokemonData?.types[1]?.type.name : ""}</button>
+              <button className="type-btn">
+                {pokemonData?.types[0] ? pokemonData?.types[0]?.type.name : ""}
+              </button>
+              <button className="type-btn">
+                {pokemonData?.types[1] ? pokemonData?.types[1]?.type.name : ""}
+              </button>
             </p>
             <p>
               <h3>Weak Against:</h3> Fighting, Ground, Steel, Water, Grass
@@ -235,25 +236,25 @@ const PokemonModel = (props) => {
           <div className="types">
             <div className="stats">
               <p>
-                HP <ProgressBar progress={pokemonStats[0]}  />
+                HP <ProgressBar progress={pokemonStats[0]} />
               </p>
               <p>
-                attack <ProgressBar progress={pokemonStats[1]}  />
+                attack <ProgressBar progress={pokemonStats[1]} />
               </p>
               <p>
-                defense <ProgressBar progress={pokemonStats[2]}  />
+                defense <ProgressBar progress={pokemonStats[2]} />
               </p>
               <p>
-                sp.Attack 
-                <ProgressBar progress={pokemonStats[3]}  />
+                sp.Attack
+                <ProgressBar progress={pokemonStats[3]} />
               </p>
               <p>
                 sp.Def
-                <ProgressBar progress={pokemonStats[4]}  />
+                <ProgressBar progress={pokemonStats[4]} />
               </p>
               <p>
-                speed 
-                <ProgressBar progress={pokemonStats[5]}  />
+                speed
+                <ProgressBar progress={pokemonStats[5]} />
               </p>
             </div>
           </div>
@@ -268,8 +269,7 @@ const PokemonModel = (props) => {
                       name={evaluation_name_array[index]}
                       img={evaluation_img_array[index]}
                       color={colorData[index]}
-                    />
-
+                    /> 
                     {evaluation_id_array.length === index + 1 ? "" : <Arrow />}
                   </>
                 );
@@ -277,12 +277,28 @@ const PokemonModel = (props) => {
 
               <div>
                 <button
+                  onClick={() => {
+                    props?.closeModal(props.id - 1);
+                  }}
+                >
+                  prev
+                </button>
+                <button
                   className="close-btn"
                   onClick={() => {
+                    getEvalId([]);
                     props?.setCloseModal();
                   }}
                 >
                   X
+                </button>
+                <button
+                  onClick={() => {
+                    getEvalId([]);
+                    props?.closeModal(props.id + 1);
+                  }}
+                >
+                  next
                 </button>
               </div>
             </div>

@@ -31,8 +31,6 @@ body {
   margin: 15px;
   border: 2px dashed #3e3c3c;
   border-radius: 10px;
-  /* background: linear-gradient(to bottom, #e0f7fa, #e1bee7); */
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
 }
 
 .pokemon-image {
@@ -88,9 +86,8 @@ body {
 }
 
 .search-input {
-  width: 450px;
+  width: 550px;
   background-color: #c9dde2;
-  max-width: 400px;
   height: 25px;
   padding: 10px;
   border: 1px solid #c9dde2;
@@ -99,8 +96,7 @@ body {
 }
 
 .search-button {
-  padding: 10px;
-  height: 55px;
+  padding: 5px;
   background-color: #c9dde2;
   border: none;
   border-radius: 0 4px 4px 0;
@@ -112,12 +108,19 @@ body {
   height: 16px;
 }
 
-.filters {
+.filter {
   display: flex;
-  justify-content: space-around;
+  flex-direction: row;
+  justify-content: center;
 }
 
-.filter {
+.filter-type {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.filter-gender {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -133,6 +136,7 @@ body {
   border: 1px solid #cfd8e3;
   border-radius: 4px;
   outline: none;
+  background-color: #c9dde2;
 }
 
 /* pagination */
@@ -144,7 +148,6 @@ body {
 
 .btn {
   padding: 10px 20px;
-  margin: 5px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -270,6 +273,9 @@ h1 {
 
 .type-btn {
   background-color: #f1cce3;
+  border-radius: 2px;
+  border: 1px solid  #ca94b5;
+  height: 25px;
 }
 
 .details .info,
@@ -361,6 +367,11 @@ h1 {
   border-radius: 50%;
   background-color: #e0f7fa;
   cursor: pointer;
+}
+
+.next-modal{
+  display: flex;
+  justify-content: center;
 }
 
 .evolution-chain h2 {

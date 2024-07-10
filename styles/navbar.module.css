@@ -1,0 +1,40 @@
+.pokedexContainer{
+    padding: 20px;
+}
+
+.title{
+    display: flex;
+    justify-self: 2px;
+}
+
+.titlepara{
+    position: absolute;
+    top: 42px;
+    left: 180px;
+}
+
+.searchContent{
+    display: flex;
+}
+
+.input{
+    position: relative;
+    height: 30px;
+    width: 40vw;
+    background-color: #c9dde2;
+    border: 2px solid #c9dde2;
+}
+
+.searchBtn{
+    height:35px;
+    background-color: #c9dde2;
+    border: 2px solid #c9dde2;
+}
+
+.filds{
+    display: flex;
+}
+
+.filterContent{
+    display: flex;
+}

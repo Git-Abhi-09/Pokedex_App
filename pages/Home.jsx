@@ -2,7 +2,9 @@ import React from "react";
 import { useState, useEffect } from "react";
 import PokemonCard from "@/components/PokemonCard";
 import PokemonModel from "@/components/PokemonModel";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
+import styles from "../styles/navbar.module.css";
+import Pagination from "@/components/Pagination";
 
 const typesOptions = [
   "fire",
@@ -20,12 +22,23 @@ const genderOptions = ["male", "female", "genderless"];
 
 const Home = () => {
   const [entities, setEntities] = useState([]);
+  const [searchEntities, setSearchEntities] = useState([]);
   const [modal, setModal] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [id, setId] = useState(null);
   const [pageData, setPageData] = useState({ currPage: 0, nextPage: 18 });
+  const [pageDatafortype, setPageDatafortype] = useState({
+    currPage: 0,
+    nextPage: 18,
+  });
+  const [pageDataforgender, setPageDataforgender] = useState({
+    currPage: 0,
+    nextPage: 18,
+  });
   const [color, setColor] = useState([]);
- 
+  const [typefilter, setTypeFilter] = useState();
+  const [genderFiter , setGenderFilter] = useState();
+
   const url = `https://pokeapi.co/api/v2/pokemon?offset=${pageData.currPage}&limit=${pageData.nextPage}`;
 
   async function getPokemon() {
@@ -62,29 +75,37 @@ const Home = () => {
     );
 
     setEntities(allPokemon);
+    setSearchEntities(allPokemon);
   }
 
   const handleSearch = () => {
-    const response = entities.filter((i) => {
+    const response = searchEntities.filter((i) => {
       return i.props.name.includes(searchValue);
     });
-    return setEntities(response);
+
+    setEntities(response);
   };
+
+  useEffect(() => {
+    const response = searchEntities.filter((i) => {
+      return i.props.name.includes(searchValue);
+    });
+
+    setEntities(response);
+  }, [searchValue]);
 
   // type search filter
 
   let alldata;
-  const fiterdata = async (e) => {
-    let categery = e.target.value;
-    const url = `https://pokeapi.co/api/v2/type/${categery}`;
+  const fiterdata = async () => {
+    const url = `https://pokeapi.co/api/v2/type/${typefilter}`;
     const responace = await fetch(url);
     const data = await responace.json();
 
     alldata = await Promise.all(
       data.pokemon.map(async (res) => {
-
         let id = res.pokemon.url.substring(34).replace("/", "");
-        
+
         const typeUrl = `https://pokeapi.co/api/v2/pokemon/${id}/`;
         const resType = await fetch(typeUrl);
         const resData = await resType.json();
@@ -111,23 +132,44 @@ const Home = () => {
         );
       })
     );
-    setEntities(alldata);
+
+    setEntities(
+      alldata.splice(pageDatafortype.currPage, pageDatafortype.nextPage)
+    );
   };
 
   useEffect(() => {
+    fiterdata();
+  }, [typefilter, pageDatafortype]);
+
+  useEffect(() => {
     getPokemon();
-  }, [searchValue, pageData]);
+  }, [pageData]);
 
   const resetAll = () => {
+    setTypeFilter(null);
+    setGenderFilter(null);
+    setEntities(null);
+    setPageData({
+      currPage: (pageData.currPage = 0),
+      nextPage: (pageData.nextPage = 18),
+    });
+    setPageDatafortype({
+      currPage: (pageData.currPage = 0),
+      nextPage: (pageData.nextPage = 18),
+    });
+    setPageDataforgender({
+      currPage: (pageData.currPage = 0),
+      nextPage: (pageData.nextPage = 18),
+    })
     getPokemon();
   };
 
   // gender filter
 
   let allGenderData;
-  const genderFiterData = async (e) => {
-    let gender = e.target.value;
-    const url = `https://pokeapi.co/api/v2/gender/${gender}/`;
+  const genderFiterData = async () => {
+    const url = `https://pokeapi.co/api/v2/gender/${genderFiter}/`;
     const responace = await fetch(url);
     const data = await responace.json();
 
@@ -160,26 +202,14 @@ const Home = () => {
         );
       })
     );
-    setEntities(allGenderData);
+    setEntities(
+      allGenderData.splice(pageDataforgender.currPage , pageDataforgender.nextPage)
+    );
   };
 
-  const resetAllGender = () => {
-    getPokemon();
-  };
-
-  const nextIndex = () => {
-    setPageData({
-      currPage: pageData.currPage + 18,
-      nextPage: (pageData.nextPage = 18),
-    });
-  };
-
-  const prevIndex = () => {
-    setPageData({
-      currPage: pageData.currPage - 18,
-      nextPage: (pageData.nextPage = 18),
-    });
-  };
+  useEffect(() => {
+    genderFiterData();
+  }, [genderFiter, pageDataforgender]);
 
   const closeModal = (id) => {
     setId(id);
@@ -192,49 +222,58 @@ const Home = () => {
 
   return (
     <>
-      <div class="pokedex-container">
-        <div class="header">
+      <div className={styles.pokedexContainer}>
+        <div className={styles.title}>
           <h1>Pokédex</h1>
-          <h1 style={{ marginLeft: "20px" }}>|</h1>
-          <p style={{ marginLeft: "20px" }}>
+          <h1 style={{ marginLeft: "10px" }}>|</h1>
+          <p className={styles.titlepara}>
             Search for any Pokémon that exists on the planet
           </p>
         </div>
-        <div class="filters">
-          
-            <div><input
+        <p>Search by</p>
+        <div className={styles.filds}>
+          <div className={styles.searchContent}>
+            <input
+              className={styles.input}
               type="text"
               placeholder="Name or Number"
-              onChange={(e)=>{
+              onChange={(e) => {
                 setSearchValue(e.target.value);
+                handleSearch();
               }}
-              className="search-input"
-            ></input></div>
-            <div><button class="search-button" onClick={handleSearch}>
-              <SearchIcon/>
-            </button></div>
-          
-          <div class="filter">
-            <label for="type">Type</label>
-            <select className="dropdown" onChange={fiterdata}>
-              {typesOptions.map((type) => (
-                <option onClick={fiterdata} value={`${type}`}>
-                  {type}
-                </option>
-              ))}
-            </select>
-            <button onClick={resetAll}>Reset-All</button>
+            ></input>
+            <button className={styles.searchBtn} onClick={handleSearch}>
+              <SearchIcon />
+            </button>
           </div>
-          <div class="filter">
-            <label for="gender">Gender</label>
-            <select id="type" onChange={genderFiterData}>
-              {genderOptions.map((type) => (
-                <option onClick={genderFiterData} value={`${type}`}>
-                  {type}
-                </option>
-              ))}
-            </select>
-            <button onClick={resetAllGender}>Reset-Gender</button>
+          <div className={styles.filterContent}>
+            <div className="type-content">
+              <p>Type</p>
+              <select
+                className="dropdown"
+                onChange={(e) => {
+                  setTypeFilter(e.target.value);
+                }}
+              >
+                {typesOptions.map((type) => (
+                  <option value={`${type}`}>{type}</option>
+                ))}
+              </select>
+              <button onClick={resetAll}>Reset-All</button>
+            </div>
+            <div className="gender-content">
+              <p>gender</p>
+              <select onChange={(e)=>{
+                setGenderFilter(e.target.value);
+              }}>
+                {genderOptions.map((type) => (
+                  <option value={`${type}`}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+              <button onClick={resetAll}>Reset-Gender</button>
+            </div>
           </div>
         </div>
       </div>
@@ -242,10 +281,18 @@ const Home = () => {
       {/* all pokemon */}
       <div className="inner-div">{entities}</div>
 
-      <div className="button-div">
-        <button className="btn" onClick={prevIndex}>Prev</button>
-        <button className="btn" onClick={nextIndex}>Next</button>
-      </div>
+      {((!typefilter && !genderFiter )?<Pagination setPageData={setPageData} pageData={pageData} />  : null )}
+
+      {(typefilter ? <Pagination
+            setPageData={setPageDatafortype}
+            pageData={pageDatafortype}
+          /> : null )}
+
+      {(genderFiter ? <Pagination
+            setPageData={setPageDataforgender}
+            pageData={pageDataforgender}
+          /> :null )}
+
       {modal ? (
         <PokemonModel
           color={color}
