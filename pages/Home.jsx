@@ -5,6 +5,7 @@ import PokemonModel from "@/components/PokemonModel";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "../styles/navbar.module.css";
 import Pagination from "@/components/Pagination";
+import Dropdown from "@/components/Dropdown";
 
 const typesOptions = [
   "fire",
@@ -259,7 +260,7 @@ const Home = () => {
                   <option value={`${type}`}>{type}</option>
                 ))}
               </select>
-              <button onClick={resetAll}>Reset-All</button>
+              <Dropdown/>
             </div>
             <div className="gender-content">
               <p>gender</p>
