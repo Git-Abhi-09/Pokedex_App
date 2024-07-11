@@ -7,19 +7,23 @@ import styles from "../styles/navbar.module.css";
 import Pagination from "@/components/Pagination";
 import Dropdown from "@/components/Dropdown";
 
-const typesOptions = [
-  "fire",
-  "fighting",
-  "flying",
-  "poison",
-  "ground",
-  "rock",
-  "bug",
-  "grass",
-  "water",
+const Options = [
+  { id: 1, value: "fire", label: "fire" },
+  { id: 2, value: "fighting", label: "fighting" },
+  { id: 3, value: "flying", label: "flying" },
+  { id: 4, value: "poison", label: "poison" },
+  { id: 5, value: "ground", label: "ground" },
+  { id: 6, value: "rock", label: "rock" },
+  { id: 7, value: "bug", label: "bug" },
+  { id: 8, value: "grass", label: "grass" },
+  { id: 9, value: "water", label: "water" },
 ];
 
-const genderOptions = ["male", "female", "genderless"];
+const genderOptions = [
+  { id: 1, value: "male", label: "male" },
+  { id: 2, value: "female", label: "female" },
+  { id: 3, value: "genderless", label: "genderless" },
+];
 
 const Home = () => {
   const [entities, setEntities] = useState([]);
@@ -37,8 +41,10 @@ const Home = () => {
     nextPage: 18,
   });
   const [color, setColor] = useState([]);
-  const [typefilter, setTypeFilter] = useState();
-  const [genderFiter , setGenderFilter] = useState();
+  const [typeOptions, setTypeOptions] = useState([]);
+  const [genderOption, setGenderOption] = useState([]);
+  const [typePage, setTypePage] = useState(false);
+  const [genderPage, setGenderPage] = useState(false);
 
   const url = `https://pokeapi.co/api/v2/pokemon?offset=${pageData.currPage}&limit=${pageData.nextPage}`;
 
@@ -98,119 +104,110 @@ const Home = () => {
   // type search filter
 
   let alldata;
-  const fiterdata = async () => {
-    const url = `https://pokeapi.co/api/v2/type/${typefilter}`;
-    const responace = await fetch(url);
-    const data = await responace.json();
+  const fiterTypedata = async () => {
+    typeOptions.map(async (each) => {
+      const url = `https://pokeapi.co/api/v2/type/${each}`;
+      const responace = await fetch(url);
+      const data = await responace.json();
+      setTypePage(true);
 
-    alldata = await Promise.all(
-      data.pokemon.map(async (res) => {
-        let id = res.pokemon.url.substring(34).replace("/", "");
+      alldata = await Promise.all(
+        data.pokemon.map(async (res) => {
+          let id = res.pokemon.url.substring(34).replace("/", "");
 
-        const typeUrl = `https://pokeapi.co/api/v2/pokemon/${id}/`;
-        const resType = await fetch(typeUrl);
-        const resData = await resType.json();
+          const typeUrl = `https://pokeapi.co/api/v2/pokemon/${id}/`;
+          const resType = await fetch(typeUrl);
+          const resData = await resType.json();
 
-        const color = [
-          resData?.types[0]?.type.name,
-          resData?.types.length === 2
-            ? resData?.types[1]?.type.name
-            : resData?.types[0]?.type.name,
-        ];
+          const color = [
+            resData?.types[0]?.type.name,
+            resData?.types.length === 2
+              ? resData?.types[1]?.type.name
+              : resData?.types[0]?.type.name,
+          ];
 
-        setColor(color);
+          setColor(color);
 
-        return (
-          <PokemonCard
-            key={resData.id}
-            img={resData?.sprites?.other?.dream_world?.front_default}
-            name={resData.forms[0].name}
-            id={resData.id}
-            className="pokemon-card"
-            closeModal={closeModal}
-            color={color}
-          />
-        );
-      })
-    );
+          return (
+            <PokemonCard
+              key={resData.id}
+              img={resData?.sprites?.other?.dream_world?.front_default}
+              name={resData.forms[0].name}
+              id={resData.id}
+              className="pokemon-card"
+              closeModal={closeModal}
+              color={color}
+            />
+          );
+        })
+      );
 
-    setEntities(
-      alldata.splice(pageDatafortype.currPage, pageDatafortype.nextPage)
-    );
+      setEntities(
+        alldata.splice(pageDatafortype.currPage, pageDatafortype.nextPage)
+      );
+    });
   };
 
   useEffect(() => {
-    fiterdata();
-  }, [typefilter, pageDatafortype]);
+    fiterTypedata();
+  }, [pageDatafortype]); // change 1
 
   useEffect(() => {
     getPokemon();
   }, [pageData]);
 
-  const resetAll = () => {
-    setTypeFilter(null);
-    setGenderFilter(null);
-    setEntities(null);
-    setPageData({
-      currPage: (pageData.currPage = 0),
-      nextPage: (pageData.nextPage = 18),
-    });
-    setPageDatafortype({
-      currPage: (pageData.currPage = 0),
-      nextPage: (pageData.nextPage = 18),
-    });
-    setPageDataforgender({
-      currPage: (pageData.currPage = 0),
-      nextPage: (pageData.nextPage = 18),
-    })
-    getPokemon();
-  };
-
   // gender filter
 
   let allGenderData;
   const genderFiterData = async () => {
-    const url = `https://pokeapi.co/api/v2/gender/${genderFiter}/`;
-    const responace = await fetch(url);
-    const data = await responace.json();
+    genderOption.map(async (eachGen) => {
+      const url = `https://pokeapi.co/api/v2/gender/${eachGen}/`;
+      const responace = await fetch(url);
+      const data = await responace.json();
 
-    allGenderData = await Promise.all(
-      data.pokemon_species_details.map(async (res, index) => {
-        let id = res.pokemon_species.url.substring(42).replace("/", "");
-        const typeUrl = `https://pokeapi.co/api/v2/pokemon/${id}/`;
-        const resType = await fetch(typeUrl);
-        const resData = await resType.json();
+      setGenderPage(true);
 
-        const color = [
-          resData?.types[0]?.type.name,
-          resData?.types.length === 2
-            ? resData?.types[1]?.type.name
-            : resData?.types[0]?.type.name,
-        ];
+      allGenderData = await Promise.all(
+        data.pokemon_species_details.map(async (res, index) => {
+          let id = res.pokemon_species.url.substring(42).replace("/", "");
+          const typeUrl = `https://pokeapi.co/api/v2/pokemon/${id}/`;
+          const resType = await fetch(typeUrl);
+          const resData = await resType.json();
 
-        setColor(color);
+          const color = [
+            resData?.types[0]?.type.name,
+            resData?.types.length === 2
+              ? resData?.types[1]?.type.name
+              : resData?.types[0]?.type.name,
+          ];
 
-        return (
-          <PokemonCard
-            key={resData.id}
-            img={resData.sprites.other.dream_world.front_default}
-            name={resData.forms[0].name}
-            id={resData.id}
-            className="pokemon-card"
-            closeModal={closeModal}
-            color={color}
-          />
-        );
-      })
-    );
-    setEntities(
-      allGenderData.splice(pageDataforgender.currPage , pageDataforgender.nextPage)
-    );
+          setColor(color);
+
+          return (
+            <PokemonCard
+              key={resData.id}
+              img={resData.sprites.other.dream_world.front_default}
+              name={resData.forms[0].name}
+              id={resData.id}
+              className="pokemon-card"
+              closeModal={closeModal}
+              color={color}
+            />
+          );
+        })
+      );
+      setEntities(
+        allGenderData.splice(
+          pageDataforgender.currPage,
+          pageDataforgender.nextPage
+        )
+      );
+    });
   };
 
   useEffect(() => {
     genderFiterData();
-  }, [genderFiter, pageDataforgender]);
+  }, [pageDataforgender]);
 
   const closeModal = (id) => {
     setId(id);
@@ -220,6 +217,8 @@ const Home = () => {
   const setCloseModal = () => {
     setModal(false);
   };
+
+  console.log("inside home :", typeOptions);
 
   return (
     <>
@@ -250,7 +249,7 @@ const Home = () => {
           <div className={styles.filterContent}>
             <div className="type-content">
               <p>Type</p>
-              <select
+              {/* <select
                 className="dropdown"
                 onChange={(e) => {
                   setTypeFilter(e.target.value);
@@ -259,12 +258,16 @@ const Home = () => {
                 {typesOptions.map((type) => (
                   <option value={`${type}`}>{type}</option>
                 ))}
-              </select>
-              <Dropdown/>
+              </select> */}
+              <Dropdown
+                setOptions={setTypeOptions}
+                fiterdata={fiterTypedata}
+                Options={Options}
+              />
             </div>
             <div className="gender-content">
               <p>gender</p>
-              <select onChange={(e)=>{
+              {/* <select onChange={(e)=>{
                 setGenderFilter(e.target.value);
               }}>
                 {genderOptions.map((type) => (
@@ -272,8 +275,12 @@ const Home = () => {
                     {type}
                   </option>
                 ))}
-              </select>
-              <button onClick={resetAll}>Reset-Gender</button>
+              </select> */}
+              <Dropdown
+                setOptions={setGenderOption}
+                fiterdata={genderFiterData}
+                Options={genderOptions}
+              />
             </div>
           </div>
         </div>
@@ -282,17 +289,23 @@ const Home = () => {
       {/* all pokemon */}
       <div className="inner-div">{entities}</div>
 
-      {((!typefilter && !genderFiter )?<Pagination setPageData={setPageData} pageData={pageData} />  : null )}
+      {!typePage && !genderPage ? (
+        <Pagination setPageData={setPageData} pageData={pageData} />
+      ) : null}
 
-      {(typefilter ? <Pagination
-            setPageData={setPageDatafortype}
-            pageData={pageDatafortype}
-          /> : null )}
+      {typePage ? (
+        <Pagination
+          setPageData={setPageDatafortype}
+          pageData={pageDatafortype}
+        />
+      ) : null}
 
-      {(genderFiter ? <Pagination
-            setPageData={setPageDataforgender}
-            pageData={pageDataforgender}
-          /> :null )}
+      {genderPage ? (
+        <Pagination
+          setPageData={setPageDataforgender}
+          pageData={pageDataforgender}
+        />
+      ) : null}
 
       {modal ? (
         <PokemonModel
