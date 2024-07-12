@@ -19,16 +19,21 @@
 
 .input{
     position: relative;
-    height: 30px;
+    height: 42px;
     width: 40vw;
+    padding: 5px;
+    margin-top: 5px;
     background-color: #c9dde2;
-    border: 2px solid #c9dde2;
+    border: 2px solid #c9dde9;
+    border-radius: 5px;
 }
 
 .searchBtn{
-    height:35px;
+    height: 55px;
+    margin-top: 5px;
     background-color: #c9dde2;
-    border: 2px solid #c9dde2;
+    border: 2px solid #c9dde9;
+    border-radius: 5px;
 }
 
 .filds{
@@ -37,4 +42,13 @@
 
 .filterContent{
     display: flex;
+}
+
+.typeContent{
+    margin-left: 100px;
+    margin-top: 5px;
+}
+.genderContent{
+    margin-left: 85px;
+    margin-top: 5px;
 }

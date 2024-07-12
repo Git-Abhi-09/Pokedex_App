@@ -230,7 +230,7 @@ const Home = () => {
             Search for any Pokémon that exists on the planet
           </p>
         </div>
-        <p>Search by</p>
+        <p style={{ display:"inline"}}>Search by</p> <p style={{marginLeft:"710px" , display:"inline"}}>Type</p> <p style={{marginLeft:"260px" , display:"inline"}} >gender</p>
         <div className={styles.filds}>
           <div className={styles.searchContent}>
             <input
@@ -247,35 +247,15 @@ const Home = () => {
             </button>
           </div>
           <div className={styles.filterContent}>
-            <div className="type-content">
-              <p>Type</p>
-              {/* <select
-                className="dropdown"
-                onChange={(e) => {
-                  setTypeFilter(e.target.value);
-                }}
-              >
-                {typesOptions.map((type) => (
-                  <option value={`${type}`}>{type}</option>
-                ))}
-              </select> */}
+            <div className={styles.typeContent}>
               <Dropdown
                 setOptions={setTypeOptions}
                 fiterdata={fiterTypedata}
                 Options={Options}
+                style={{marginLeft:"550px"}}
               />
             </div>
-            <div className="gender-content">
-              <p>gender</p>
-              {/* <select onChange={(e)=>{
-                setGenderFilter(e.target.value);
-              }}>
-                {genderOptions.map((type) => (
-                  <option value={`${type}`}>
-                    {type}
-                  </option>
-                ))}
-              </select> */}
+            <div className={styles.genderContent}>
               <Dropdown
                 setOptions={setGenderOption}
                 fiterdata={genderFiterData}

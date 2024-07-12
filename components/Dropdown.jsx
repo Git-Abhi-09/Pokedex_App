@@ -59,12 +59,12 @@ const Dropdown = (props) => {
 
   return (
     <>
-      <FormControl sx={{ width: "100%" }}>
+      <FormControl sx={{ width: "200px" }} style={{marginLeft:"20px"}}>
         <Select
           value={selectValue}
           multiple
+          style={{backgroundColor:"#c9dde2"}}
           id="multi-select"
-          className=""
           onChange={handleValue}
           renderValue={(selected) => selected.join(", ")}
         >
