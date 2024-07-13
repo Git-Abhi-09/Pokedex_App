@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import PokemonCard from "./PokemonCard";
 import Arrow from "./Arrow";
 import ProgressBar from "./ProgressBar";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CloseIcon from '@mui/icons-material/Close';
 
 const PokemonModel = (props) => {
   const url_text = `https://pokeapi.co/api/v2/pokemon-species/${props.id}/`;
@@ -83,7 +86,6 @@ const PokemonModel = (props) => {
   }, [evaluationData]);
 
   useEffect(() => {
-    EvolutionArray.forEach((singlPok) => {});
     imgData.forEach((getEval_img_id) => {
       const eval_url = `https://pokeapi.co/api/v2/pokemon/${getEval_img_id}/`;
       fetch(eval_url).then((res) => {
@@ -101,7 +103,7 @@ const PokemonModel = (props) => {
             return [...prev, color];
           });
 
-          setColorData1((prev) => {
+          setColorData1(() => {
             return [color];
           });
 
@@ -169,8 +171,36 @@ const PokemonModel = (props) => {
       <div className="modal-container">
         <div className="container">
           <div className="header-inside">
-            <h1>{pokemonData?.name}</h1>
+            <h1 style={{textTransform:"uppercase"}}>{pokemonData?.name}</h1>
             <h1>00{pokemonData?.id}</h1>
+            <div>
+                <button
+                className="close-btn"
+                  onClick={() => {
+                    props?.closeModal(props.id - 1);
+                  }}
+                >
+                 <ArrowBackIcon/>
+                </button>
+                <button
+                  className="close-btn"
+                  onClick={() => {
+                    getEvalId([]);
+                    props?.setCloseModal();
+                  }}
+                >
+                  <CloseIcon/>
+                </button>
+                <button
+                  className="close-btn"
+                  onClick={() => {
+                    getEvalId([]);
+                    props?.closeModal(props.id + 1);
+                  }}
+                >
+                  <ArrowForwardIcon/>
+                </button>
+              </div>
           </div>
           <div className="model-card">
             <PokemonCard
@@ -274,33 +304,6 @@ const PokemonModel = (props) => {
                   </>
                 );
               })}
-
-              <div>
-                <button
-                  onClick={() => {
-                    props?.closeModal(props.id - 1);
-                  }}
-                >
-                  prev
-                </button>
-                <button
-                  className="close-btn"
-                  onClick={() => {
-                    getEvalId([]);
-                    props?.setCloseModal();
-                  }}
-                >
-                  X
-                </button>
-                <button
-                  onClick={() => {
-                    getEvalId([]);
-                    props?.closeModal(props.id + 1);
-                  }}
-                >
-                  next
-                </button>
-              </div>
             </div>
           </div>
         </div>

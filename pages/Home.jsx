@@ -41,7 +41,7 @@ const Home = () => {
     nextPage: 18,
   });
   const [color, setColor] = useState([]);
-  const [typeOptions, setTypeOptions] = useState([]);
+  const [typeOptions, setTypeOptions] = useState([]); //
   const [genderOption, setGenderOption] = useState([]);
   const [typePage, setTypePage] = useState(false);
   const [genderPage, setGenderPage] = useState(false);
@@ -101,51 +101,50 @@ const Home = () => {
     setEntities(response);
   }, [searchValue]);
 
-  // type search filter
-
   let alldata;
   const fiterTypedata = async () => {
-    typeOptions.map(async (each) => {
+    const typedPokemons = [];
+    for (let i = 0; i < typeOptions.length; i++) {
+      const each = typeOptions[i];
       const url = `https://pokeapi.co/api/v2/type/${each}`;
       const responace = await fetch(url);
       const data = await responace.json();
-      setTypePage(true);
+      typedPokemons.push(...data.pokemon.map((pk) => pk.pokemon.url));
+    }
+    const filteredTypedPokemons = new Set(typedPokemons);
+    setTypePage(true);
 
-      alldata = await Promise.all(
-        data.pokemon.map(async (res) => {
-          let id = res.pokemon.url.substring(34).replace("/", "");
+    const fetchPromises = [...filteredTypedPokemons].map((url) =>
+      fetch(url).then((res) => res.json())
+    );
 
-          const typeUrl = `https://pokeapi.co/api/v2/pokemon/${id}/`;
-          const resType = await fetch(typeUrl);
-          const resData = await resType.json();
+    const responses = await Promise.all(fetchPromises);
 
-          const color = [
-            resData?.types[0]?.type.name,
-            resData?.types.length === 2
-              ? resData?.types[1]?.type.name
-              : resData?.types[0]?.type.name,
-          ];
+    alldata = responses?.map((res) => {
+      const color = [
+        res?.types[0]?.type.name,
+        res?.types.length === 2
+          ? res?.types[1]?.type.name
+          : res?.types[0]?.type.name,
+      ];
 
-          setColor(color);
+      setColor(color);
 
-          return (
-            <PokemonCard
-              key={resData.id}
-              img={resData?.sprites?.other?.dream_world?.front_default}
-              name={resData.forms[0].name}
-              id={resData.id}
-              className="pokemon-card"
-              closeModal={closeModal}
-              color={color}
-            />
-          );
-        })
-      );
-
-      setEntities(
-        alldata.splice(pageDatafortype.currPage, pageDatafortype.nextPage)
+      return (
+        <PokemonCard
+          key={res.id}
+          img={res?.sprites?.other?.dream_world?.front_default}
+          name={res.forms[0].name}
+          id={res.id}
+          className="pokemon-card"
+          closeModal={closeModal}
+          color={color}
+        />
       );
     });
+    setEntities(
+      alldata?.splice(pageDatafortype.currPage, pageDatafortype.nextPage)
+    );
   };
 
   useEffect(() => {
@@ -155,6 +154,10 @@ const Home = () => {
   useEffect(() => {
     getPokemon();
   }, [pageData]);
+
+  useEffect(() => {
+    fiterTypedata();
+  }, [typeOptions.length]);
 
   // gender filter
 
@@ -218,8 +221,6 @@ const Home = () => {
     setModal(false);
   };
 
-  console.log("inside home :", typeOptions);
-
   return (
     <>
       <div className={styles.pokedexContainer}>
@@ -230,7 +231,9 @@ const Home = () => {
             Search for any Pokémon that exists on the planet
           </p>
         </div>
-        <p style={{ display:"inline"}}>Search by</p> <p style={{marginLeft:"710px" , display:"inline"}}>Type</p> <p style={{marginLeft:"260px" , display:"inline"}} >gender</p>
+        <p style={{ display: "inline" }}>Search by</p>{" "}
+        <p style={{ marginLeft: "710px", display: "inline" }}>Type</p>{" "}
+        <p style={{ marginLeft: "260px", display: "inline" }}>gender</p>
         <div className={styles.filds}>
           <div className={styles.searchContent}>
             <input
@@ -252,7 +255,7 @@ const Home = () => {
                 setOptions={setTypeOptions}
                 fiterdata={fiterTypedata}
                 Options={Options}
-                style={{marginLeft:"550px"}}
+                style={{ marginLeft: "550px" }}
               />
             </div>
             <div className={styles.genderContent}>
