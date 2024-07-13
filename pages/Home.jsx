@@ -43,8 +43,6 @@ const Home = () => {
   const [color, setColor] = useState([]);
   const [typeOptions, setTypeOptions] = useState([]); //
   const [genderOption, setGenderOption] = useState([]);
-  const [typePage, setTypePage] = useState(false);
-  const [genderPage, setGenderPage] = useState(false);
 
   const url = `https://pokeapi.co/api/v2/pokemon?offset=${pageData.currPage}&limit=${pageData.nextPage}`;
 
@@ -103,8 +101,17 @@ const Home = () => {
 
   let alldata;
   const fiterTypedata = async () => {
+    if (
+      (typeOptions && typeOptions?.length == 0 && !genderOption) ||
+      (!typeOptions && !genderOption) ||
+      (genderOption && genderOption?.length == 0 && !typeOptions)
+    ) {
+      getPokemon();
+    }
+    setGenderOption(null);
+
     const typedPokemons = [];
-    for (let i = 0; i < typeOptions.length; i++) {
+    for (let i = 0; i < typeOptions?.length; i++) {
       const each = typeOptions[i];
       const url = `https://pokeapi.co/api/v2/type/${each}`;
       const responace = await fetch(url);
@@ -112,7 +119,6 @@ const Home = () => {
       typedPokemons.push(...data.pokemon.map((pk) => pk.pokemon.url));
     }
     const filteredTypedPokemons = new Set(typedPokemons);
-    setTypePage(true);
 
     const fetchPromises = [...filteredTypedPokemons].map((url) =>
       fetch(url).then((res) => res.json())
@@ -149,68 +155,76 @@ const Home = () => {
 
   useEffect(() => {
     fiterTypedata();
-  }, [pageDatafortype]); // change 1
+  }, [pageDatafortype, typeOptions?.length]); // change 1
 
   useEffect(() => {
     getPokemon();
   }, [pageData]);
 
-  useEffect(() => {
-    fiterTypedata();
-  }, [typeOptions.length]);
-
   // gender filter
 
-  let allGenderData;
   const genderFiterData = async () => {
-    genderOption.map(async (eachGen) => {
-      const url = `https://pokeapi.co/api/v2/gender/${eachGen}/`;
+    if (
+      (typeOptions && typeOptions?.length == 0 && !genderOption) ||
+      (!typeOptions && !genderOption) ||
+      (genderOption && genderOption?.length == 0 && !typeOptions)
+    ) {
+      getPokemon();
+    }
+    setTypeOptions(null);
+    const pokeIds = [];
+    for (let i = 0; i < genderOption?.length; i++) {
+      const each = genderOption[i];
+      const url = `https://pokeapi.co/api/v2/gender/${each}`;
       const responace = await fetch(url);
       const data = await responace.json();
-
-      setGenderPage(true);
-
-      allGenderData = await Promise.all(
-        data.pokemon_species_details.map(async (res, index) => {
-          let id = res.pokemon_species.url.substring(42).replace("/", "");
-          const typeUrl = `https://pokeapi.co/api/v2/pokemon/${id}/`;
-          const resType = await fetch(typeUrl);
-          const resData = await resType.json();
-
-          const color = [
-            resData?.types[0]?.type.name,
-            resData?.types.length === 2
-              ? resData?.types[1]?.type.name
-              : resData?.types[0]?.type.name,
-          ];
-
-          setColor(color);
-
-          return (
-            <PokemonCard
-              key={resData.id}
-              img={resData.sprites.other.dream_world.front_default}
-              name={resData.forms[0].name}
-              id={resData.id}
-              className="pokemon-card"
-              closeModal={closeModal}
-              color={color}
-            />
-          );
-        })
-      );
-      setEntities(
-        allGenderData.splice(
-          pageDataforgender.currPage,
-          pageDataforgender.nextPage
+      pokeIds.push(
+        ...data.pokemon_species_details?.map((pk) =>
+          pk.pokemon_species.url.substring(42).replace("/", "")
         )
       );
+    }
+
+    const filteredTypedPokemonsIds = new Set(pokeIds);
+
+    const fetchPromises = [...filteredTypedPokemonsIds].map((id) =>
+      fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`).then((res) =>
+        res.json()
+      )
+    );
+
+    const responses = await Promise.all(fetchPromises);
+
+    alldata = responses?.map((res) => {
+      const color = [
+        res?.types[0]?.type.name,
+        res?.types.length === 2
+          ? res?.types[1]?.type.name
+          : res?.types[0]?.type.name,
+      ];
+
+      setColor(color);
+
+      return (
+        <PokemonCard
+          key={res.id}
+          img={res?.sprites?.other?.dream_world?.front_default}
+          name={res.forms[0].name}
+          id={res.id}
+          className="pokemon-card"
+          closeModal={closeModal}
+          color={color}
+        />
+      );
     });
+    setEntities(
+      alldata?.splice(pageDataforgender.currPage, pageDataforgender.nextPage)
+    );
   };
 
   useEffect(() => {
     genderFiterData();
-  }, [pageDataforgender]);
+  }, [pageDataforgender, genderOption?.length]);
 
   const closeModal = (id) => {
     setId(id);
@@ -272,23 +286,23 @@ const Home = () => {
       {/* all pokemon */}
       <div className="inner-div">{entities}</div>
 
-      {!typePage && !genderPage ? (
+      {!typeOptions && !genderOption && (
         <Pagination setPageData={setPageData} pageData={pageData} />
-      ) : null}
+      )}
 
-      {typePage ? (
+      {typeOptions && !genderOption && (
         <Pagination
           setPageData={setPageDatafortype}
           pageData={pageDatafortype}
         />
-      ) : null}
+      )}
 
-      {genderPage ? (
+      {genderOption && !typeOptions && (
         <Pagination
           setPageData={setPageDataforgender}
           pageData={pageDataforgender}
         />
-      ) : null}
+      )}
 
       {modal ? (
         <PokemonModel

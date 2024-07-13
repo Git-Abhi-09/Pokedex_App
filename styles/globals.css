@@ -55,7 +55,7 @@ body {
 /* Navbar */
 
 .pokedex-container {
-  background-color:#deeded;
+  background-color: #deeded;
   padding: 10px;
   margin: 10px;
   border-radius: 8px;
@@ -182,14 +182,14 @@ button:focus {
 }
 
 .modal-container {
-  position: absolute;
-  top: 50%;
+  position: fixed;
+  top: 65px;
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 0.5rem;
   height: auto;
   max-width: 100%;
-  max-height: 100%;
+  max-height: 100px;
   background-color: #fff;
 }
 .modal-text {
@@ -220,13 +220,20 @@ h1 {
 
 .container {
   background-color: #ffffff;
+  margin-top: 0px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 100%;
+  height: 750px;
   padding: 20px;
   box-sizing: border-box;
   background-color: #e0f7fa;
+  overflow: scroll;
+  scrollbar-color: #e0f7fa #879a9c;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  border: 5px solid rgb(143, 89, 154);
 }
 
 .header h1 {
@@ -274,7 +281,7 @@ h1 {
 .type-btn {
   background-color: #f1cce3;
   border-radius: 2px;
-  border: 1px solid  #ca94b5;
+  border: 1px solid #ca94b5;
   height: 25px;
 }
 
@@ -360,7 +367,7 @@ h1 {
 }
 
 .close-btn {
-  border: 1px solid #5b6465 ;
+  border: 1px solid #5b6465;
   margin: 2px;
   border-radius: 50%;
   background-color: #e0f7fa;
@@ -368,7 +375,7 @@ h1 {
   cursor: pointer;
 }
 
-.next-modal{
+.next-modal {
   display: flex;
   justify-content: center;
 }
