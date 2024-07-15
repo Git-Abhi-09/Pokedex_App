@@ -30,7 +30,7 @@ const Home = () => {
   const [searchEntities, setSearchEntities] = useState([]);
   const [modal, setModal] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [id, setId] = useState(null);
+  const [pkid, setId] = useState(null);
   const [pageData, setPageData] = useState({ currPage: 0, nextPage: 18 });
   const [pageDatafortype, setPageDatafortype] = useState({
     currPage: 0,
@@ -41,10 +41,11 @@ const Home = () => {
     nextPage: 18,
   });
   const [color, setColor] = useState([]);
-  const [typeOptions, setTypeOptions] = useState([]); //
+  const [typeOptions, setTypeOptions] = useState([]);
   const [genderOption, setGenderOption] = useState([]);
 
   const url = `https://pokeapi.co/api/v2/pokemon?offset=${pageData.currPage}&limit=${pageData.nextPage}`;
+
 
   async function getPokemon() {
     const res = await fetch(url);
@@ -307,7 +308,7 @@ const Home = () => {
       {modal ? (
         <PokemonModel
           color={color}
-          id={id}
+          id={pkid}
           closeModal={closeModal}
           setCloseModal={setCloseModal}
         />

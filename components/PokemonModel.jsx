@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import PokemonCard from "./PokemonCard";
 import Arrow from "./Arrow";
 import ProgressBar from "./ProgressBar";
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import CloseIcon from '@mui/icons-material/Close';
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CloseIcon from "@mui/icons-material/Close";
 
 const PokemonModel = (props) => {
   const url_text = `https://pokeapi.co/api/v2/pokemon-species/${props.id}/`;
@@ -12,8 +12,6 @@ const PokemonModel = (props) => {
 
   const [pokemonData, setpokemonData] = useState();
   const [text, getText] = useState("");
-  const [evaluationData, getEvaluationData] = useState("");
-  const [imgData, getImgData] = useState([]);
   const [imgUrl, getImgUrl] = useState([]);
   const [evalId, getEvalId] = useState([]);
   const [evalName, getEvalName] = useState([]);
@@ -21,73 +19,85 @@ const PokemonModel = (props) => {
   const [colorData, setColorData] = useState([]);
   const [colorData1, setColorData1] = useState([]);
   const [modal, setModal] = useState(false);
+  const [pokemonDiscription, setPokemonDiscription] = useState(" ");
+  const [evalImgId, setEvalImgId] = useState([]);
 
   useEffect(() => {
+    const stats = ["HP", "attack", "defense", "sp.Attack", "sp.Def", "speed"];
+
     fetch(url).then((res) => {
       res.json().then((data) => {
         setpokemonData(data);
-      });
-    });
-  }, [props.id]);
-
-  useEffect(() => {
-    fetch(url_text).then((res) => {
-      res.json().then((data_text) => {
-        getText(data_text);
-      });
-    });
-  }, [props.id]);
-
-  // color
-
-  // stats
-
-  useEffect(() => {
-    pokemonData?.stats.forEach((pokeStats) => {
-      getPokemonStats((prevStats) => {
-        return [...prevStats, pokeStats.base_stat];
-      });
-    });
-  }, [pokemonData]);
-
-  // Evaluation - chain
-
-  const evaluation_url = text.evolution_chain?.url;
-
-  useEffect(() => {
-    fetch(evaluation_url).then((res) => {
-      res.json().then((Evaluation_text) => {
-        getEvaluationData(Evaluation_text);
-      });
-    });
-  }, [text]);
-
-  let EvolutionArray = [];
-  EvolutionArray.push(evaluationData?.chain?.species);
-  EvolutionArray.push(evaluationData?.chain?.evolves_to[0]?.species);
-  let eval3 =
-    evaluationData?.chain?.evolves_to[0]?.evolves_to[0] == undefined
-      ? ""
-      : evaluationData?.chain?.evolves_to[0]?.evolves_to[0]?.species;
-  if (eval3 != "") {
-    EvolutionArray.push(eval3);
-  }
-
-  useEffect(() => {
-    EvolutionArray.forEach((obj) => {
-      fetch(obj?.url).then((res) => {
-        res.json().then((img_data) => {
-          getImgData((previous) => {
-            return [...previous, img_data.id];
+        // stats
+        data?.stats.forEach((pokeStats, index) => {
+          getPokemonStats((prevStats) => {
+            return [
+              ...prevStats,
+              <p>
+                {stats[index]} <ProgressBar progress={pokeStats.base_stat} />
+              </p>,
+            ];
           });
         });
       });
     });
-  }, [evaluationData]);
+
+    getPokemonStats([]);
+
+    fetch(url_text).then((res) => {
+      res.json().then((data_text) => {
+        getText(data_text);
+        // pokemon discription
+        let pokemon_discription = " ";
+        data_text?.flavor_text_entries?.forEach((element) => {
+          if (element?.language?.name === "en") {
+            if (
+              !pokemon_discription?.includes(
+                element?.flavor_text.replace("\n", "").replace("", "")
+              )
+            ) {
+              pokemon_discription += element?.flavor_text
+                .replace("\n", "")
+                .replace("", "");
+            }
+          }
+        });
+        setPokemonDiscription(pokemon_discription);
+
+        // Evaluation - chain
+        const evaluation_url = data_text.evolution_chain?.url;
+
+        fetch(evaluation_url).then((res) => {
+          res.json().then((Evaluation_text) => {
+            const evalArray = [
+              Evaluation_text?.chain?.species,
+              Evaluation_text?.chain?.evolves_to[0]?.species,
+              Evaluation_text?.chain?.evolves_to[0]?.evolves_to[0] == undefined
+                ? ""
+                : Evaluation_text?.chain?.evolves_to[0]?.evolves_to[0]?.species,
+            ];
+
+            console.log({ evalArray });
+
+            for (let index = 0; index < evalArray.length; index++) {
+              const element = evalArray[index].url
+                .substring(42)
+                .replace("/", "");
+              setEvalImgId((prev) => {
+                return [...prev, element];
+              });
+            }
+          });
+        });
+      });
+    });
+  }, [props.id]);
+
+  console.log({ evalImgId });
 
   useEffect(() => {
-    imgData.forEach((getEval_img_id) => {
-      const eval_url = `https://pokeapi.co/api/v2/pokemon/${getEval_img_id}/`;
+    evalImgId.forEach((id) => {
+      const eval_url = `https://pokeapi.co/api/v2/pokemon/${id}/`;
       fetch(eval_url).then((res) => {
         res.json().then((eval_img_url) => {
           // get color
@@ -125,32 +135,16 @@ const PokemonModel = (props) => {
         });
       });
     });
-  }, [imgData]);
+  }, [evalImgId]);
 
   const unique_eval_url = [...new Set(imgUrl)];
-  const evaluation_img_array = unique_eval_url.sort();
+  let evaluation_img_array = unique_eval_url.sort();
 
   const unique_evalId = [...new Set(evalId)];
   let evaluation_id_array = unique_evalId.sort();
 
   const unique_evalName = [...new Set(evalName)];
   const evaluation_name_array = unique_evalName.sort();
-
-  let pokemon_discription = "";
-
-  text?.flavor_text_entries?.forEach((element) => {
-    if (element?.language?.name === "en") {
-      if (
-        !pokemon_discription?.includes(
-          element?.flavor_text.replace("\n", "").replace("", "")
-        )
-      ) {
-        pokemon_discription += element?.flavor_text
-          .replace("\n", "")
-          .replace("", "");
-      }
-    }
-  });
 
   const getModal = () => {
     setModal(true);
@@ -171,36 +165,43 @@ const PokemonModel = (props) => {
       <div className="modal-container">
         <div className="container">
           <div className="header-inside">
-            <h1 style={{textTransform:"uppercase"}}>{pokemonData?.name}</h1>
+            <h1 style={{ textTransform: "uppercase" }}>{pokemonData?.name}</h1>
             <h1>00{pokemonData?.id}</h1>
             <div>
-                <button
+              <button
                 className="close-btn"
-                  onClick={() => {
-                    props?.closeModal(props.id - 1);
-                  }}
-                >
-                 <ArrowBackIcon/>
-                </button>
-                <button
-                  className="close-btn"
-                  onClick={() => {
-                    getEvalId([]);
-                    props?.setCloseModal();
-                  }}
-                >
-                  <CloseIcon/>
-                </button>
-                <button
-                  className="close-btn"
-                  onClick={() => {
-                    getEvalId([]);
-                    props?.closeModal(props.id + 1);
-                  }}
-                >
-                  <ArrowForwardIcon/>
-                </button>
-              </div>
+                onClick={() => {
+                  getEvalId([]);
+                  setEvalImgId([]);
+                  getImgUrl([]);
+                  props?.closeModal(props.id - 1);
+                }}
+              >
+                <ArrowBackIcon />
+              </button>
+              <button
+                className="close-btn"
+                onClick={() => {
+                  getEvalId([]);
+                  setEvalImgId([]);
+                  getImgUrl([]);
+                  props?.setCloseModal();
+                }}
+              >
+                <CloseIcon />
+              </button>
+              <button
+                className="close-btn"
+                onClick={() => {
+                  getEvalId([]);
+                  setEvalImgId([]);
+                  getImgUrl([]);
+                  props?.closeModal(props.id + 1);
+                }}
+              >
+                <ArrowForwardIcon />
+              </button>
+            </div>
           </div>
           <div className="model-card">
             <PokemonCard
@@ -209,7 +210,7 @@ const PokemonModel = (props) => {
               id={pokemonData?.id}
             />
             <p className="pokemon-detail">
-              {pokemon_discription?.substring(0, 700)}
+              {pokemonDiscription?.substring(0, 700)}
               <a className="read-more" onClick={getModal}>
                 ...read more
               </a>
@@ -218,7 +219,7 @@ const PokemonModel = (props) => {
           {modal ? (
             <div className="modal-text">
               <p id="pokemonDescription">
-                {pokemon_discription?.substring(701)}
+                {pokemonDiscription?.substring(701)}
               </p>
               <botton className="close-btn1" onClick={closeModal}>
                 X
@@ -245,18 +246,19 @@ const PokemonModel = (props) => {
             </p>
             <p>
               <h3>Ability :</h3>
-              {pokemonData?.abilities
-                ? pokemonData?.abilities[0].ability?.name
-                : ""}
+              {pokemonData?.abilities.map((ele) => (
+                <>
+                  <span>{ele.ability?.name}</span>&nbsp;
+                </>
+              ))}
             </p>
             <p>
               <h3>Types:</h3>
-              <button className="type-btn">
-                {pokemonData?.types[0] ? pokemonData?.types[0]?.type.name : ""}
-              </button>
-              <button className="type-btn">
-                {pokemonData?.types[1] ? pokemonData?.types[1]?.type.name : ""}
-              </button>
+              {pokemonData?.types.map((ele) => (
+                <>
+                  <button className="type-btn">{ele.type.name}</button> &nbsp;{" "}
+                </>
+              ))}
             </p>
             <p>
               <h3>Weak Against:</h3> Fighting, Ground, Steel, Water, Grass
@@ -265,27 +267,7 @@ const PokemonModel = (props) => {
 
           <div className="types">
             <div className="stats">
-              <p>
-                HP <ProgressBar progress={pokemonStats[0]} />
-              </p>
-              <p>
-                attack <ProgressBar progress={pokemonStats[1]} />
-              </p>
-              <p>
-                defense <ProgressBar progress={pokemonStats[2]} />
-              </p>
-              <p>
-                sp.Attack
-                <ProgressBar progress={pokemonStats[3]} />
-              </p>
-              <p>
-                sp.Def
-                <ProgressBar progress={pokemonStats[4]} />
-              </p>
-              <p>
-                speed
-                <ProgressBar progress={pokemonStats[5]} />
-              </p>
+              {pokemonStats}
             </div>
           </div>
           <div className="evolution-chain">
@@ -299,7 +281,7 @@ const PokemonModel = (props) => {
                       name={evaluation_name_array[index]}
                       img={evaluation_img_array[index]}
                       color={colorData[index]}
-                    /> 
+                    />
                     {evaluation_id_array.length === index + 1 ? "" : <Arrow />}
                   </>
                 );
