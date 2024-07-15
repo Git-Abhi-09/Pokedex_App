@@ -5,6 +5,7 @@ import ProgressBar from "./ProgressBar";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
+import styles from "../styles/pokemonModel.module.css";
 
 const PokemonModel = (props) => {
   const url_text = `https://pokeapi.co/api/v2/pokemon-species/${props.id}/`;
@@ -77,8 +78,6 @@ const PokemonModel = (props) => {
                 : Evaluation_text?.chain?.evolves_to[0]?.evolves_to[0]?.species,
             ];
 
-            console.log({ evalArray });
-
             for (let index = 0; index < evalArray.length; index++) {
               const element = evalArray[index].url
                 .substring(42)
@@ -92,8 +91,6 @@ const PokemonModel = (props) => {
       });
     });
   }, [props.id]);
-
-  console.log({ evalImgId });
 
   useEffect(() => {
     evalImgId.forEach((id) => {
@@ -157,19 +154,19 @@ const PokemonModel = (props) => {
   return (
     <>
       <div
-        className="modal-wrapper"
+        className={styles.modalWrapper}
         onClick={() => {
           props.setCloseModal();
         }}
       ></div>
-      <div className="modal-container">
-        <div className="container">
+      <div className={styles.modalContainer}>
+        <div className={styles.container}>
           <div className="header-inside">
             <h1 style={{ textTransform: "uppercase" }}>{pokemonData?.name}</h1>
             <h1>00{pokemonData?.id}</h1>
             <div>
               <button
-                className="close-btn"
+                className={styles.closeBtn}
                 onClick={() => {
                   getEvalId([]);
                   setEvalImgId([]);
@@ -180,7 +177,7 @@ const PokemonModel = (props) => {
                 <ArrowBackIcon />
               </button>
               <button
-                className="close-btn"
+                className={styles.closeBtn}
                 onClick={() => {
                   getEvalId([]);
                   setEvalImgId([]);
@@ -191,7 +188,7 @@ const PokemonModel = (props) => {
                 <CloseIcon />
               </button>
               <button
-                className="close-btn"
+                className={styles.closeBtn}
                 onClick={() => {
                   getEvalId([]);
                   setEvalImgId([]);
@@ -203,13 +200,13 @@ const PokemonModel = (props) => {
               </button>
             </div>
           </div>
-          <div className="model-card">
+          <div className={styles.modelCard}>
             <PokemonCard
               img={pokemonData?.sprites?.other?.dream_world?.front_default}
               color={colorData1[0]}
               id={pokemonData?.id}
             />
-            <p className="pokemon-detail">
+            <p className={styles.pokemonDetail}>
               {pokemonDiscription?.substring(0, 700)}
               <a className="read-more" onClick={getModal}>
                 ...read more
@@ -217,17 +214,17 @@ const PokemonModel = (props) => {
             </p>
           </div>
           {modal ? (
-            <div className="modal-text">
+            <div className={styles.modalText}>
               <p id="pokemonDescription">
                 {pokemonDiscription?.substring(701)}
               </p>
-              <botton className="close-btn1" onClick={closeModal}>
+              <botton className={styles.closeBtn1} onClick={closeModal}>
                 X
               </botton>
             </div>
           ) : null}
 
-          <div className="info">
+          <div className={styles.info}>
             <p>
               <h3>Height:</h3> {pokemonData?.height}
             </p>
@@ -256,7 +253,7 @@ const PokemonModel = (props) => {
               <h3>Types:</h3>
               {pokemonData?.types.map((ele) => (
                 <>
-                  <button className="type-btn">{ele.type.name}</button> &nbsp;{" "}
+                  <button className={styles.typeBtn}>{ele.type.name}</button> &nbsp;
                 </>
               ))}
             </p>
@@ -265,14 +262,14 @@ const PokemonModel = (props) => {
             </p>
           </div>
 
-          <div className="types">
-            <div className="stats">
+          <div className={styles.types}>
+            <div className={styles.stats}>
               {pokemonStats}
             </div>
           </div>
           <div className="evolution-chain">
             <h2>Evolution Chain</h2>
-            <div className="evolution">
+            <div className={styles.evolution}>
               {evaluation_id_array.map((singlePok, index) => {
                 return (
                   <>

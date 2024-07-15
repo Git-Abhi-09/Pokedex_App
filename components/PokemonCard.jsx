@@ -1,3 +1,5 @@
+import styles from "../styles/pokemonCard.module.css";
+
 const PokemonCard = (props) => {
   const color = {
     normal: "#DDCBD0",
@@ -24,10 +26,10 @@ const PokemonCard = (props) => {
 
   return (
     <>
-      <div className="main-div">
+      <div className={styles.mainDiv}>
         <div
           key={1}
-          className="card"
+          className={styles.card}
           onClick={() => {
             props.closeModal(props?.id);
           }}
