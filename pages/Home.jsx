@@ -6,6 +6,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import styles from "../styles/navbar.module.css";
 import Pagination from "@/components/Pagination";
 import Dropdown from "@/components/Dropdown";
+import TuneIcon from '@mui/icons-material/Tune';
+import Mobilemodal from "@/components/Mobilemodal";
 
 const Options = [
   { id: 1, value: "fire", label: "fire" },
@@ -43,6 +45,7 @@ const Home = () => {
   const [color, setColor] = useState([]);
   const [typeOptions, setTypeOptions] = useState([]);
   const [genderOption, setGenderOption] = useState([]);
+  const [mobileModal, setMobileModal] = useState(false);
 
   const url = `https://pokeapi.co/api/v2/pokemon?offset=${pageData.currPage}&limit=${pageData.nextPage}`;
 
@@ -94,7 +97,7 @@ const Home = () => {
 
   useEffect(() => {
     const response = searchEntities.filter((i) => {
-      return i.props.name.includes(searchValue);
+      return i.props.name.includes(searchValue.toLowerCase());
     });
 
     setEntities(response);
@@ -236,19 +239,24 @@ const Home = () => {
     setModal(false);
   };
 
+  const getMobileModal = () =>{
+    setMobileModal(true);
+  }
+
   return (
     <>
       <div className={styles.pokedexContainer}>
         <div className={styles.title}>
-          <h1>Pokédex</h1>
-          <h1 style={{ marginLeft: "10px" }}>|</h1>
+          <h1 className={styles.titleName}>Pokédex</h1>
+          <h1 className={styles.symbol}>|</h1>
+          <div className={styles.line}></div>
           <p className={styles.titlepara}>
             Search for any Pokémon that exists on the planet
           </p>
         </div>
-        <p style={{ display: "inline" }}>Search by</p>{" "}
-        <p style={{ marginLeft: "710px", display: "inline" }}>Type</p>{" "}
-        <p style={{ marginLeft: "260px", display: "inline" }}>gender</p>
+        <p className={styles.search}>Search by</p>
+        <p className={styles.para1}>Type</p>
+        <p className={styles.para2}>gender</p>
         <div className={styles.filds}>
           <div className={styles.searchContent}>
             <input
@@ -263,6 +271,10 @@ const Home = () => {
             <button className={styles.searchBtn} onClick={handleSearch}>
               <SearchIcon />
             </button>
+            <button className={styles.searchFilter} onClick={getMobileModal}>
+              <TuneIcon/>
+            </button>
+            
           </div>
           <div className={styles.filterContent}>
             <div className={styles.typeContent}>
@@ -311,6 +323,10 @@ const Home = () => {
           id={pkid}
           closeModal={closeModal}
           setCloseModal={setCloseModal}
+        />
+      ) : null}
+      {mobileModal ? (
+        <Mobilemodal
         />
       ) : null}
     </>

@@ -1,7 +1,4 @@
 /* pokemonCard */
-* {
-  text-transform: capitalize;
-}
 
 body {
   display: flex;
@@ -37,6 +34,7 @@ body {
   font-size: 25px;
   color: #666;
 }
+  
 
 /* Navbar */
 
@@ -183,7 +181,6 @@ h1 {
   color: #666;
 }
 
-
 .header h1 {
   margin: 0;
   font-size: 24px;
@@ -232,6 +229,7 @@ h1 {
 .read-more {
   text-decoration: underline;
   cursor: pointer;
+  margin-left: 85%;
 }
 
 
@@ -329,4 +327,19 @@ select {
   font-size: small;
   color: white;
   transition: width 0.3s ease-in-out;
+}
+
+@media (max-width: 600px ){
+  .pokemon-image {
+    width: 120px;
+    height: 160px;
+  }
+#pkid{
+  display: block;
+}
+.read-more {
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 70%;
+}
 }

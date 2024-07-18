@@ -1,32 +1,129 @@
 .pokedexContainer{
     position: relative;
-    padding: 20px;
+    padding: 1vw;
 }
 
 .title{
     display: flex;
-    justify-self: 2px;
+    justify-self: 2vw;
+    width: 70%;
 }
 
 .titlepara{
-    position: absolute;
-    top: 42px;
-    left: 180px;
+    position: relative;
+    top: 2.3vh;
+    margin-left: 1vw;
 }
 
 .searchContent{
     display: flex;
+    width: 70%;
 }
+
+.para1{
+  margin-left: 710px;
+  display: inline;
+}
+
+.para2{
+    margin-left: 260px;
+    display: inline;
+  }
 
 .input{
     position: relative;
-    height: 42px;
-    width: 40vw;
+    height: 5vh;
+    width: 60%;
     padding: 5px;
     margin-top: 5px;
     background-color: #c9dde2;
-    border: 2px solid #c9dde9;
+    border: 2px solid #c9dde2;
     border-radius: 5px;
+}
+.symbol{
+    margin-left: 10px;
+}
+.search{
+    display: inline;
+    color: #2E3156;
+}
+
+@media (max-width: 600px ) {
+
+    .titleName{
+        margin-left: 2px;
+        width: 100%;
+        line-height: 1vh;
+        color: #2E3156;
+        font-size: 5vw;
+    }
+    .titlepara{
+        margin-top: 0px;
+        line-height: 2vh;
+    }
+    .title{
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 2px;
+        color: #5D5E7A;
+        font-weight: 600;
+        width: 100%;
+        line-height: 1vh;
+    }
+
+    .line{
+        height: 0%;
+        width: 100%;
+        border: 0.5px solid #2E3156;
+    }
+
+    .typeContent{
+      display: none;
+    }
+    .genderContent{
+      display: none;
+    }
+    .symbol{
+      display: none;
+    }
+    .search{
+        display: none;
+    }
+    .searchContent{
+        display: flex;
+        width: 100%;
+    }
+    .para1{
+       display: none;;
+      }
+    .para2{
+        display: none;;
+    }
+    .searchBtn{
+       display: none;
+    }
+      
+    .searchFilter{
+        height: 55px;
+        margin-top: 5px;
+        color: white;
+        background-color: #2E3156;
+        border: 2px solid #2E3156;
+        border-radius: 5px;
+        margin-left: 5vw;
+    }
+          
+
+    .input{
+        height: 42px;
+        width: 100%;
+        align-items: center;
+        padding: 5px;
+        margin-top: 5px;
+        background-color: #c9dde2;
+        border: 2px solid #c9dde9;
+        border-radius: 5px;
+    }
 }
 
 .searchBtn{
@@ -52,4 +149,11 @@
 .genderContent{
     margin-left: 85px;
     margin-top: 5px;
+}
+
+@media (min-width: 700px ){
+.searchFilter{
+    display: none;
+}
+
 }

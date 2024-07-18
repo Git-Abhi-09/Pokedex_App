@@ -78,7 +78,7 @@ const Dropdown = (props) => {
           onChange={handleChange}
           renderValue={(selected) => selected.join(', ')}
         >
-          {props.Options.map((options) => (
+          {props?.Options?.map((options) => (
             <MenuItem key={options.id} value={options.value}>
               <ListItemIcon>
                 <Checkbox

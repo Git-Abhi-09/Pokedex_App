@@ -162,9 +162,9 @@ const PokemonModel = (props) => {
       <div className={styles.modalContainer}>
         <div className={styles.container}>
           <div className="header-inside">
-            <h1 style={{ textTransform: "uppercase" }}>{pokemonData?.name}</h1>
-            <h1>00{pokemonData?.id}</h1>
-            <div>
+            <h6 style={{ textTransform: "uppercase" }}>{pokemonData?.name}</h6>
+            <h6>00{pokemonData?.id}</h6>
+            <div className={styles.btnDiv}>
               <button
                 className={styles.closeBtn}
                 onClick={() => {
@@ -174,7 +174,7 @@ const PokemonModel = (props) => {
                   props?.closeModal(props.id - 1);
                 }}
               >
-                <ArrowBackIcon />
+                <ArrowBackIcon className="icon"/>
               </button>
               <button
                 className={styles.closeBtn}
@@ -208,11 +208,11 @@ const PokemonModel = (props) => {
             />
             <p className={styles.pokemonDetail}>
               {pokemonDiscription?.substring(0, 700)}
-              <a className="read-more" onClick={getModal}>
-                ...read more
-              </a>
             </p>
           </div>
+          <a className="read-more" onClick={getModal}>
+                ...read more
+              </a>
           {modal ? (
             <div className={styles.modalText}>
               <p id="pokemonDescription">
