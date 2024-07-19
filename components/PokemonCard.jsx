@@ -29,7 +29,7 @@ const PokemonCard = (props) => {
       <div className={styles.mainDiv}>
         <div
           key={1}
-          className={styles.card}
+          className="card"
           onClick={() => {
             props.closeModal(props?.id);
           }}

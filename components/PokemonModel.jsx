@@ -269,7 +269,7 @@ const PokemonModel = (props) => {
           </div>
           <div className="evolution-chain">
             <h2>Evolution Chain</h2>
-            <div className={styles.evolution}>
+            <div className="evolution">
               {evaluation_id_array.map((singlePok, index) => {
                 return (
                   <>
@@ -279,7 +279,7 @@ const PokemonModel = (props) => {
                       img={evaluation_img_array[index]}
                       color={colorData[index]}
                     />
-                    {evaluation_id_array.length === index + 1 ? "" : <Arrow />}
+                    {evaluation_id_array.length === index + 1 ? "" : <div className="arrow" ><Arrow /></div>}
                   </>
                 );
               })}

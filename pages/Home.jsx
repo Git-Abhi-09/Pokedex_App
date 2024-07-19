@@ -255,8 +255,6 @@ const Home = () => {
           </p>
         </div>
         <p className={styles.search}>Search by</p>
-        <p className={styles.para1}>Type</p>
-        <p className={styles.para2}>gender</p>
         <div className={styles.filds}>
           <div className={styles.searchContent}>
             <input
@@ -282,7 +280,8 @@ const Home = () => {
                 setOptions={setTypeOptions}
                 fiterdata={fiterTypedata}
                 Options={Options}
-                style={{ marginLeft: "550px" }}
+                style={{ marginLeft: "350px" }}
+                optionName="Types"
               />
             </div>
             <div className={styles.genderContent}>
@@ -290,6 +289,7 @@ const Home = () => {
                 setOptions={setGenderOption}
                 fiterdata={genderFiterData}
                 Options={genderOptions}
+                optionName="Gender"
               />
             </div>
           </div>
@@ -325,8 +325,23 @@ const Home = () => {
           setCloseModal={setCloseModal}
         />
       ) : null}
+      {console.log(mobileModal)}
       {mobileModal ? (
         <Mobilemodal
+        closeMobileModal={()=>{
+          setMobileModal(false);
+        }}
+        setOptions={setTypeOptions}
+        fiterdata={fiterTypedata}
+        Options={Options}
+        optionName = "Types"
+
+        setOptionsG={setGenderOption}
+        fiterdataG={genderFiterData}
+        OptionsG={genderOptions}
+        optionNameG = "Gender"
+
+
         />
       ) : null}
     </>

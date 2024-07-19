@@ -310,6 +310,24 @@ select {
   border-radius: 4px;
   background-color: #e0f7fa;
 }
+.card {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+  height: 280px;
+  margin: 15px;
+  border: 2px dashed #3e3c3c;
+  border-radius: 10px;
+}
+
+.evolution {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: auto;
+}
 
 /* progress bar */
 .progressBar {
@@ -342,4 +360,48 @@ select {
   cursor: pointer;
   margin-left: 70%;
 }
+.card {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 145px;
+  height: 225px;
+  margin: 10px;
+  border: 2px dashed #3e3c3c;
+  border-radius: 10px;
+}
+.evolution .card {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  width: 100px;
+  height: 120px;
+  margin: 10px;
+  border: 2px dashed #3e3c3c;
+  border-radius: 10px;
+}
+
+.evolution .card .pokemon-image {
+  width: 70px;
+  height: 90px;
+}
+
+.evolution .card .pokemon-name {
+  font-size: 15px;
+}
+
+.evolution .card .pokemon-number {
+  font-size: 15px;
+}
+.evolution .arrow{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3px;
+  width: 3px;
+}
+
+
 }
